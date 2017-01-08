@@ -42,5 +42,25 @@
 (deftest string2bigint-test
   (string2bigint-zero)
   (string2bigint-positive)
-  (string2bigint-negative)
-  )
+  (string2bigint-negative))
+
+(deftest bigint2string-test
+	(testing "zero"
+		(is (= "0" (bigint2string {:negative false :number [0]})))
+		(is (= "-0" (bigint2string {:negative true :number [0]}))))
+	(testing "positive numbers"
+		(is (= "1" (bigint2string {:negative false :number [1]})))
+		(is (= "10" (bigint2string {:negative false :number [0 1]})))
+		(is (= "400" (bigint2string {:negative false :number [0 0 4]})))
+		(is (= "90205" (bigint2string {:negative false :number [5 0 2 0 9]}))))
+	(testing "negative numbers"
+		(is (= "-1" (bigint2string {:negative true :number [1]})))
+		(is (= "-10" (bigint2string {:negative true :number [0 1]})))
+		(is (= "-400" (bigint2string {:negative true :number [0 0 4]})))
+		(is (= "-90205" (bigint2string {:negative true :number [5 0 2 0 9]})))))
+
+
+
+
+
+

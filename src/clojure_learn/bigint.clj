@@ -46,6 +46,17 @@
 	
 
 ; convert a bigint to a string
+(defn bigint2string
+	"Convert a bigint to string"
+	[bigint]
+
+	;main body of function
+	(let [
+		strseq (map str (reverse (bigint :number)))   ; convert the number part into a string
+		sign   (if (bigint :negative) "-" "")         ; determine if we need to put a "-" sign in front      
+		]
+		(clojure.string/join "" (conj strseq sign))))
+
 
 ; add two bigint
 
