@@ -17,16 +17,17 @@
 (deftest foo
   (testing "Foo"
     (testing "converting 0" 
-    	(is (= 0 (compare [0] (string2bigint "0"))) "Should return [0]"))))
+    	(is (= {:negative false :number [1 0 2]} (string2bigint "201")) "Should return  + [0]"))))
 
-(deftest string2bigint-test
-  (testing "string2bigint tests"
-    (testing "converting 0" 
-    	(is (= 0 (compare [0] (string2bigint "0"))) "Should return [0]"))
-    (testing "postive integers"
-		(is (= 0 (compare [1] (string2bigint "1"))) "Should return [1]")
-		(is (= 0 (compare [0 1] (string2bigint "10"))) "Should return [0 1]")
-		(is (= 0 (compare [0 0 4] (string2bigint "400"))) "Should return [0 0 4]")
-		(is (= 0 (compare [2 6 5 1] (string2bigint "1562"))) "Should return [2 6 5 1]")
-		(is (= 0 (compare [7 2 1 9 3 2 1 5 0 4 0 2] (string2bigint "204051239127"))) "Should return [7 2 .. 0 2]"))
-    (testing "negative integers")))
+(deftest string2bigint-zero
+	(testing "converting 0" 
+    	(is (= {:negative false :number [0]} (string2bigint "0")) "Should return  + [0]")))
+  
+(deftest string2bigint-positive
+  (testing "postive integers"
+    	(is (= {:negative false :number [1]} (string2bigint "1")) "Should return  + [1]")
+    	(is (= {:negative false :number [0 1]} (string2bigint "10")) "Should return  + [0 1]")
+    	(is (= {:negative false :number [0 0 4]} (string2bigint "400")) "Should return  + [0 0 4]")
+    	(is (= {:negative false :number [2 6 0 1]} (string2bigint "1062")) "Should return  + [2 6 0 1]")
+    	(is (= {:negative false :number [7 2 1 9 3 2 1 5 0 4 0 2]} (string2bigint "204051239127")) "Should return  + [7 2 .. 0 2]")))
+

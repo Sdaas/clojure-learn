@@ -2,38 +2,47 @@
 
 TODO Description
 
-## Installation
+## List of Modules
+* `bigint`  : For infinite precision integer arithmetic
 
-Download from http://example.com/FIXME.
+## Adding a new module
+To add a new module called `XXX`
 
-## Adding a new library/module
+### Code
+* Add a new file `src/XXX.clj`
+* At the top of the file, add the name space for this module
+ ```
+(ns clojure-learn.XXX (:gen-class))
+```
 
-- The 
-## Usage
+### Test Cases
 
-FIXME: explanation
+* Add a new file test/XXX_test.clj
+* At the top of the file add the namespace of the test and all the dependencies
+```
+(ns clojure-learn.XXX-test
+  (:require [clojure.test :refer :all]
+            [clojure-learn.bigint :refer :all]))
+```
+To run all tests in project
+```
+lein test
+```
+To run all tests for `XXX`
+```
+lein test clojure-learn.XXX-test
+```
+To run only a specific test
+```
+lein test :only clojure-learn.bigint-test/name_of_the_test
+```
 
-    $ java -jar clojure-learn-0.1.0-standalone.jar [args]
+## References
+### Markdown
+* [Github markdown editor and viewer](http://dillinger.io/)
 
-## Options
+## TODO
+### bigint
+* Add support for negative numbers
 
-FIXME: listing of options this app accepts.
 
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2017 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
