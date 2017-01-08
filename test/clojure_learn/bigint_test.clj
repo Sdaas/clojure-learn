@@ -31,3 +31,16 @@
     	(is (= {:negative false :number [2 6 0 1]} (string2bigint "1062")) "Should return  + [2 6 0 1]")
     	(is (= {:negative false :number [7 2 1 9 3 2 1 5 0 4 0 2]} (string2bigint "204051239127")) "Should return  + [7 2 .. 0 2]")))
 
+(deftest string2bigint-negative
+  (testing "negative integers"
+    	(is (= {:negative true :number [1]} (string2bigint "-1")) "Should return  - [1]")
+    	(is (= {:negative true :number [0 1]} (string2bigint "-10")) "Should return  - [0 1]")
+    	(is (= {:negative true :number [0 0 4]} (string2bigint "-400")) "Should return  - [0 0 4]")
+    	(is (= {:negative true :number [2 6 0 1]} (string2bigint "-1062")) "Should return  - [2 6 0 1]")
+    	(is (= {:negative true :number [7 2 1 9 3 2 1 5 0 4 0 2]} (string2bigint "-204051239127")) "Should return  - [7 2 .. 0 2]")))
+
+(deftest string2bigint-test
+  (string2bigint-zero)
+  (string2bigint-positive)
+  (string2bigint-negative)
+  )

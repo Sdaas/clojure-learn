@@ -23,9 +23,11 @@
 ; TODO error handling not included here
 ; See https://clojure.github.io/clojure/clojure.string-api.html
 (defn string2bigint
-	"Convert a string to bigint"
+	"Convert a string to bigint. example -1234 or 1234"
 	[s]
 
+	; internal utility function - that converts a string (without sign) 
+	; into a vector where index n represents the 10^n position
 	(defn string2intvec
 		"Convert a string (without any sign) to a vector of int"
 		[s]
@@ -35,7 +37,13 @@
 				intvec (into [] intseq)  ; convert this to vector [1 0 2]
 		     ]
 		     intvec))
-	{:negative false :number (string2intvec s)})
+	; main body
+	(let [ 
+			negative (= "-" (subs s 0 1)) ; set to true/false if the leading char is a "-"
+			s2 (if negative (subs s 1) s) ; if negative number, then ignore the sign
+		]
+		{:negative negative :number (string2intvec s2) }))
+	
 
 ; convert a bigint to a string
 
