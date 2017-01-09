@@ -59,6 +59,28 @@
 		(is (= "-400" (bigint2string {:negative true :number [0 0 4]})))
 		(is (= "-90205" (bigint2string {:negative true :number [5 0 2 0 9]})))))
 
+(deftest zero-test
+	(testing "equality")
+		(is (= true (zero? {:negative false :number [0]})))   ; positive zero
+		(is (= true (zero? {:negative true  :number [0]}))))  ; negative zero
+
+(deftest equals-test
+	(testing "positive numbers"
+		(is (= true (equal? {:negative false :number [1 2 3]} {:negative false :number [1 2 3]} )))
+		(is (= false (equal? {:negative false :number [1 2 3]} {:negative false :number [1 2 3 4]} )))
+		(is (= false (equal? {:negative false :number [1 2 3]} {:negative false :number [1 4 3]} ))))
+	(testing "negative numbers"
+		(is (= true (equal? {:negative true :number [1 2 3]} {:negative true :number [1 2 3]} )))
+		(is (= false (equal? {:negative true :number [1 2 3]} {:negative true :number [1 2 3 4]} )))
+		(is (= false (equal? {:negative true :number [1 2 3]} {:negative true :number [1 4 3]} ))))
+	(testing "different sign on the same value"
+		(is (= false (equal? {:negative false :number [1 2 3]} {:negative true :number [1 2 3]} )))
+		(is (= false (equal? {:negative true :number [1 2 3]} {:negative false :number [1 2 3]} ))))
+	(testing "zero"
+		(is (= true (equal? {:negative false :number [0]} {:negative false :number [0]} )))
+		(is (= true (equal? {:negative true :number [0]} {:negative true :number [0]} )))
+		(is (= true (equal? {:negative true :number [0]} {:negative false :number [0]} )))))
+
 
 
 

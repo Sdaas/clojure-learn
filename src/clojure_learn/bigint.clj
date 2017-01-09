@@ -57,6 +57,34 @@
 		]
 		(clojure.string/join "" (conj strseq sign))))
 
+; return zero
+(defn zero
+	"Returns zero"
+	[]
+	{:negative false :number [0]})
+
+; test for zero
+; works both for "negative zero" and "positive zero"
+(defn zero?
+	"Return true if the number is zero, false otherwise"
+	[n]
+	(let
+		[
+			zn ((zero) :number)
+			nn (n :number)
+		]
+		(= 0 (compare zn nn))))
+
+; test for equality
+(defn equal?
+	"Returns true if two numbers are equal, false otherwise"
+	[n1 n2]
+	; first test for zero. This is a special case since "positive zero" == "negative zero"
+	(if (and (zero? n1) (zero? n2))
+		true
+		(if (not= (n1 :negative) (n2 :negative))
+			false	; if the signs are not same, then obviously not equal
+			(= 0 (compare (n1 :number) (n2 :number)))))) ; compare() returns 0/1 so need to convert this true/false
 
 ; add two bigint
 
