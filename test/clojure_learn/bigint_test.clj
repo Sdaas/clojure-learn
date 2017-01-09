@@ -60,9 +60,13 @@
 		(is (= "-90205" (bigint2string {:negative true :number [5 0 2 0 9]})))))
 
 (deftest zero-test
-	(testing "equality")
-		(is (= true (zero? {:negative false :number [0]})))   ; positive zero
-		(is (= true (zero? {:negative true  :number [0]}))))  ; negative zero
+	(testing "positive zero"
+		(is (= true (is-zero? {:negative false :number [0]}))))   ; positive zero
+	(testing "negative zero"
+		(is (= true (is-zero? {:negative true :number [0]})))) 
+	(testing "non-zero"
+		(is (= false (is-zero? {:negative false :number [1]})))
+		(is (= false (is-zero? {:negative true  :number [0 0 1]})))))   
 
 (deftest equals-test
 	(testing "positive numbers"
@@ -81,8 +85,25 @@
 		(is (= true (equal? {:negative true :number [0]} {:negative true :number [0]} )))
 		(is (= true (equal? {:negative true :number [0]} {:negative false :number [0]} )))))
 
+(deftest add-zero-test
+	(testing "add zero to zero"
+		(is (= true (equal? {:negative false :number [0]}  (add {:negative false :number [0]} {:negative false :number [0]}) ))))
+	(testing "add zero to non-zero"
+		(is (= true (equal? {:negative false :number [1 2 3]}  (add {:negative false :number [0]} {:negative false :number [1 2 3]}) )))
+		(is (= true (equal? {:negative false :number [4 5 6]}  (add {:negative false :number [4 5 6]} {:negative false :number [0]}) )))))
+	
+
+(deftest add-positive-test
+	(testing "same size no carry"
+		(is (= true (equal? {:negative false :number [3 5 7]}  (add {:negative false :number [1 2 3]} {:negative false :number [2 3 4]}) ))))
+	(testing "different size no carry"
+		(is (= true (equal? {:negative false :number [3 5 4 5]}  (add {:negative false :number [1 2]} {:negative false :number [2 3 4 5]}) ))))
+	(testing "with carry"
+		(is (= true (equal? {:negative false :number [2 7]}  (add {:negative false :number [3 2]} {:negative false :number [9 4]}) )))
+		(is (= true (equal? {:negative false :number [2 1 1]}  (add {:negative false :number [7 4]} {:negative false :number [5 6]}) )))
 
 
-
+		)
+	)
 
 

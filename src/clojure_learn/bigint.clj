@@ -65,7 +65,7 @@
 
 ; test for zero
 ; works both for "negative zero" and "positive zero"
-(defn zero?
+(defn is-zero?
 	"Return true if the number is zero, false otherwise"
 	[n]
 	(let
@@ -80,12 +80,76 @@
 	"Returns true if two numbers are equal, false otherwise"
 	[n1 n2]
 	; first test for zero. This is a special case since "positive zero" == "negative zero"
-	(if (and (zero? n1) (zero? n2))
+	(if (and (is-zero? n1) (is-zero? n2))
 		true
 		(if (not= (n1 :negative) (n2 :negative))
 			false	; if the signs are not same, then obviously not equal
 			(= 0 (compare (n1 :number) (n2 :number)))))) ; compare() returns 0/1 so need to convert this true/false
 
+; test for negative number
+(defn negative?
+	"Return true if this is a negative number, false otherwise"
+	[n]
+	(= true (n :negative)))
+
+; test for negative number
+(defn positive? 
+	"Return true if this is a positive number, false otherwise"
+	[n]
+	(not (negative? n)))
+
+; Private function - add two vectors of numbers without paying attention to the sign
+(defn- -unsigned-add
+	"Add two vectors"
+	[v1 v2]
+
+	(defn accumulate
+		[acc carry v1 v2]
+		(println "accumulate called")
+		(println "v1 = " v1)
+		(println "v2 = " v2)
+		(println "ac = " acc)
+		(println "carry = " carry)
+		(if (and (empty? v1) (empty? v2)) 
+			(if (= 0 carry)
+				acc
+				(conj acc carry))
+			(let [
+				n1  (or (first v1) 0)
+				n2  (or (first v2) 0)
+				sum (+ carry n1 n2)
+				v   (rem sum 10)
+				new_carry (quot sum 10)
+				new_acc (conj acc v)
+				]
+				(accumulate new_acc new_carry (rest v1) (rest v2))))) ; use recur here ? 
+
+	; main body
+	(accumulate [] 0 v1 v2))
+
+; Private function - subtract two vectors of numbers without paying attention to the sign
+(defn- -unsigned-subtract
+	"Subtract two vectors"
+	[v1 v2]
+	[1 2 3])    ; TODO CODE NEEDS TO BE WRITTEN HERE
+
+
 ; add two bigint
+(defn add
+	"Add two numbers"
+	[n1 n2]
+	(let [
+		v1	(n1 :number)
+		v2  (n2 :number)
+		]
+		(println "** add called **")
+		{:negative false :number (-unsigned-add v1 v2)}
+		)
+
+	; adding positive numbers
+	; adding both negative numbers
+	; adding different sign numbers
+
+	)
 
 ; subtract bigint
