@@ -83,6 +83,19 @@
 		]
 		(= 0 (compare zn nn))))
 
+
+; test for negative number
+(defn negative?
+	"Return true if this is a negative number, false otherwise"
+	[n]
+	(= true (n :negative)))
+
+; test for negative number
+(defn positive? 
+	"Return true if this is a positive number, false otherwise"
+	[n]
+	(not (negative? n)))
+
 ; test for equality
 (defn equal?
 	"Returns true if two numbers are equal, false otherwise"
@@ -100,10 +113,10 @@
 	[n1 n2]
 	(let [
 		cmp (compare (n1 :number) (n2 :number))
-		both_positive ( and (not (n1 :negative)) (not (n2 :negative)))
-		both_negative ( and (n1 :negative) (n2 :negative))
-		n1_positive   ( and (not (n1 :negative)) (n2 :negative))
-		n2_positive   ( and (n1 :negative) (not (n2 :negative)))
+		both_positive ( and (positive? n1) (positive? n2))
+		both_negative ( and (negative? n1) (negative? n2))
+		n1_positive   ( and (positive? n1) (negative? n2))
+		n2_positive   ( and (negative? n1) (positive? n2))
 		]
 
 		(if n1_positive
@@ -121,17 +134,7 @@
 	; if n1 != n2  AND n1 is not greater than n2, then n1 is less than n2
 	(and (not (equal? n1 n2)) (not (greater? n1 n2))))
 
-; test for negative number
-(defn negative?
-	"Return true if this is a negative number, false otherwise"
-	[n]
-	(= true (n :negative)))
 
-; test for negative number
-(defn positive? 
-	"Return true if this is a positive number, false otherwise"
-	[n]
-	(not (negative? n)))
 
 ; Private function - add two vectors of numbers without paying attention to the sign
 (defn- -unsigned-add
