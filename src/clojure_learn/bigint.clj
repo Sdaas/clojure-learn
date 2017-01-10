@@ -94,6 +94,33 @@
 			false	; if the signs are not same, then obviously not equal
 			(= 0 (compare (n1 :number) (n2 :number)))))) ; compare() returns 0/1 so need to convert this true/false
 
+; test for greater than
+(defn greater?
+	"Returns true if n1 > n2, false otherwise"
+	[n1 n2]
+	(let [
+		cmp (compare (n1 :number) (n2 :number))
+		both_positive ( and (not (n1 :negative)) (not (n2 :negative)))
+		both_negative ( and (n1 :negative) (n2 :negative))
+		n1_positive   ( and (not (n1 :negative)) (n2 :negative))
+		n2_positive   ( and (n1 :negative) (not (n2 :negative)))
+		]
+
+		(if n1_positive
+			true
+			(if n2_positive
+				false
+				(if both_positive
+					(= 1 cmp)
+					(= -1 cmp))))))
+
+; test for less than
+(defn less?
+	"Returns true if n1 < n2, false otherwise"
+	[n1 n2]
+	; if n1 != n2  AND n1 is not greater than n2, then n1 is less than n2
+	(and (not (equal? n1 n2)) (not (greater? n1 n2))))
+
 ; test for negative number
 (defn negative?
 	"Return true if this is a negative number, false otherwise"

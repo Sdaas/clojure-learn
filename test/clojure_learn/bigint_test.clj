@@ -85,6 +85,40 @@
 		(is (= true (equal? {:negative true :number [0]} {:negative true :number [0]} )))
 		(is (= true (equal? {:negative true :number [0]} {:negative false :number [0]} )))))
 
+(deftest greater-test
+	(testing "both positive numbers"
+		(is (= false (greater? {:negative false :number [1 2 3]} {:negative false :number [1 2 3]} )))
+		(is (= false (greater? {:negative false :number [1 2]} {:negative false :number [1 3]} )))
+		(is (= true (greater? {:negative false :number [1 2 3]} {:negative false :number [1 0 3]} ))))
+	(testing "both negative numbers"
+		(is (= false (greater? {:negative true :number [1 2 3]} {:negative true :number [1 2 3]} )))
+		(is (= true (greater? {:negative true :number [1 2]} {:negative true :number [1 3]} )))
+		(is (= false (greater? {:negative true :number [1 2 3]} {:negative true :number [1 0 3]} ))))
+	(testing "mixed sign numbers"
+		(is (= false (greater? {:negative true :number [1 2]} {:negative false :number [1]} )))
+		(is (= false (greater? {:negative true :number [1 2]} {:negative false :number [1]} )))
+		(is (= false (greater? {:negative true :number [0 0 1]} {:negative false :number [1]} ))))
+		(is (= true (greater? {:negative false :number [0]} {:negative true :number [1 2]} )))
+		(is (= true (greater? {:negative false :number [1 ]} {:negative true :number [1]} )))
+		(is (= true (greater? {:negative false :number [1]} {:negative true :number [1]} ))))
+
+(deftest less-test
+	(testing "both positive numbers"
+		(is (= false (less? {:negative false :number [1 2 3]} {:negative false :number [1 2 3]} )))
+		(is (= true (less? {:negative false :number [1 2]} {:negative false :number [1 3]} )))
+		(is (= false (less? {:negative false :number [1 2 3]} {:negative false :number [1 0 3]} ))))
+	(testing "both negative numbers"
+		(is (= false (less? {:negative true :number [1 2 3]} {:negative true :number [1 2 3]} )))
+		(is (= false (less? {:negative true :number [1 2]} {:negative true :number [1 3]} )))
+		(is (= true (less? {:negative true :number [1 2 3]} {:negative true :number [1 0 3]} ))))
+	(testing "mixed sign numbers"
+		(is (= true (less? {:negative true :number [1 2]} {:negative false :number [1]} )))
+		(is (= true (less? {:negative true :number [1 2]} {:negative false :number [1]} )))
+		(is (= true (less? {:negative true :number [0 0 1]} {:negative false :number [1]} ))))
+		(is (= false (less? {:negative false :number [0]} {:negative true :number [1 2]} )))
+		(is (= false (less? {:negative false :number [1 ]} {:negative true :number [1]} )))
+		(is (= false (less? {:negative false :number [1]} {:negative true :number [1]} ))))
+
 (deftest add-zero-test
 	(testing "add zero to zero"
 		(is (= true (equal? {:negative false :number [0]}  (add {:negative false :number [0]} {:negative false :number [0]}) ))))
