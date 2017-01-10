@@ -17,7 +17,14 @@
 ; EQUALITY, GREATER THAN, SMALLER THAN
 ;
 
-; convert an int to bigint
+(defn- -trim
+	"Remove any unncessary leading zeros"
+	[v1]
+	(if (= nil (last v1))
+		[0]
+		(if (= 0 (last v1))
+			(-trim (pop v1))
+			v1)))
 
 ; convert a string to bigint
 ; TODO error handling not included here
@@ -56,6 +63,7 @@
 		sign   (if (bigint :negative) "-" "")         ; determine if we need to put a "-" sign in front      
 		]
 		(clojure.string/join "" (conj strseq sign))))
+
 
 ; return zero
 (defn zero
@@ -127,31 +135,50 @@
 	; main body
 	(accumulate [] 0 v1 v2))
 
+
+
 ; Private function - subtract two vectors of numbers without paying attention to the sign
 (defn- -unsigned-subtract
 	"Subtract two vectors"
 	[v1 v2]     ; assumes that v1 > v2
 
+
+	(defn borrow
+		[v1]
+		(if (= 0 (second v1))
+			(borrow (cons (first v1) (borrow (rest v1))))
+			(let [
+				tail (rest (rest v1))
+				n1   ( + (first v1) 10)
+				n2   (dec (second v1))
+				]
+				(cons n1 (cons n2 tail)))))
+
 	(defn accumulate
-		[acc borrow v1 v2]
+		[acc v1 v2]
 		(println "accumulate called")
 		(println "v1 = " v1)
 		(println "v2 = " v2)
 		(println "ac = " acc)
-		(println "borrow = " borrow)
 		(if (and (empty? v1) (empty? v2)) 
 			acc
 			(let [
-				n1  (- (or (first v1) 0) borrow)
+				n1  (or (first v1) 0)
 				n2  (or (first v2) 0)
-				new_borrow (if (< n1 n2) 1 0)
-				diff (- (+ (* 10 borrow) n1) n2)
-				new_acc (conj acc diff)
+				do_borrow (< n1 n2)
 				]
-				(recur new_acc new_borrow (rest v1) (rest v2)))))
+				(if do_borrow
+					; borrowing
+					(accumulate acc (borrow v1) v2)
+					; no borrowing needed. So simple case
+					(let [
+						diff (- n1 n2)
+						new_acc (conj acc diff)
+						]
+						(recur new_acc (rest v1) (rest v2)))))))
 
 	; main body
-	(accumulate [] 0 v1 v2))
+	(accumulate [] v1 v2))
 
 
 ; add two bigint
@@ -178,9 +205,10 @@
 	(let [
 		v1	(n1 :number)
 		v2  (n2 :number)
+		result (-trim (-unsigned-subtract v1 v2))
 		]
 		(println "** subtract called **")
-		{:negative false :number (-unsigned-subtract v1 v2)}
+		{:negative false :number result}
 		))
 
 

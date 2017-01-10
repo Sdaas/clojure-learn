@@ -102,14 +102,33 @@
 		(is (= true (equal? {:negative false :number [2 7]}  (add {:negative false :number [3 2]} {:negative false :number [9 4]}) )))
 		(is (= true (equal? {:negative false :number [2 1 1]}  (add {:negative false :number [7 4]} {:negative false :number [5 6]}) )))))
 
+(deftest add-test
+	(add-zero-test)
+	(add-positive-test))
+
+(deftest subtract-zero-test
+	(testing "subtract zero to zero"
+		(is (= true (equal? {:negative false :number [0]}  (subtract {:negative false :number [0]} {:negative false :number [0]}) ))))
+	(testing "subtract zero from non-zero"
+		(is (= true (equal? {:negative false :number [4 5 6]}  (subtract {:negative false :number [4 5 6]} {:negative false :number [0]}) )))))
 
 (deftest subtract-positive-test
-	(testing "same size no borrow"
+	(testing "zero result"
+		(is (= true (equal? {:negative false :number [0]} (subtract {:negative false :number [3 5 7]} {:negative false :number [3 5 7]}) ))))
+	(testing "no borrow"
 		(is (= true (equal? {:negative false :number [2 1]} (subtract {:negative false :number [5 3]} {:negative false :number [3 2]}) )))
+		(is (= true (equal? {:negative false :number [3 4 3 8]} (subtract {:negative false :number [4 7 5 8]} {:negative false :number [1 3 2]}) )))
+		(is (= true (equal? {:negative false :number [0 0 0 1]} (subtract {:negative false :number [4 3 2 1]} {:negative false :number [4 3 2]}) ))))
+	(testing "with borrow"
+		(is (= true (equal? {:negative false :number [6 1]} (subtract {:negative false :number [4 3]} {:negative false :number [8 1]}) )))
+		(is (= true (equal? {:negative false :number [9 9]} (subtract {:negative false :number [0 0 1]} {:negative false :number [1]}) )))
+		(is (= true (equal? {:negative false :number [2 1 9]} (subtract {:negative false :number [7 0 0 1]} {:negative false :number [5 9]}) )))
+		(is (= true (equal? {:negative false :number [9 8 8]} (subtract {:negative false :number [4 3 2 1]} {:negative false :number [5 4 3]}) )))))
 
-		)
+(deftest subtract-test
+	(subtract-zero-test)
+	(subtract-positive-test))
 
-	)
 
 
 
