@@ -119,6 +119,14 @@
 		(is (= false (less? {:negative false :number [1 ]} {:negative true :number [1]} )))
 		(is (= false (less? {:negative false :number [1]} {:negative true :number [1]} ))))
 
+(deftest abs-test
+	(testing "zero"
+		(is (= true (equal? {:negative false :number [0]} (abs {:negative false :number [0]}))))
+		(is (= true (equal? {:negative false :number [0]} (abs {:negative true :number [0]})))))
+	(testing "non-zero"
+		(is (= true (equal? {:negative false :number [1 2 3 4]} (abs {:negative false :number [1 2 3 4]}))))
+		(is (= true (equal? {:negative false :number [1 2 3 4]} (abs {:negative true :number [1 2 3 4]}))))))
+
 (deftest add-zero-test
 	(testing "add zero to zero"
 		(is (= true (equal? {:negative false :number [0]}  (add {:negative false :number [0]} {:negative false :number [0]}) ))))
@@ -145,10 +153,22 @@
 		(is (= true (equal? {:negative true :number [2 7]}  (add {:negative true :number [3 2]} {:negative true :number [9 4]}) )))
 		(is (= true (equal? {:negative true :number [2 1 1]}  (add {:negative true :number [7 4]} {:negative true :number [5 6]}) )))))
 
+(deftest add-mixed-test
+	(testing "zero sum"
+		(is (= true (equal? {:negative false :number [0]}  (add {:negative true :number [1 2]} {:negative false :number [1 2]}) )))
+		(is (= true (equal? {:negative false :number [0]}  (add {:negative false :number [1 2]} {:negative true :number [1 2]}) ))))
+	(testing "mixed1"
+		(is (= true (equal? {:negative false :number [4 1]} (add {:negative true :number [1 2]} {:negative false :number [5 3]}) )))
+		(is (= true (equal? {:negative true  :number [3 2]} (add {:negative true :number [8 5]} {:negative false :number [5 3]}) ))))
+	(testing "mixed2"
+		(is (= true (equal? {:negative true  :number [4 1]} (add {:negative false :number [1 2]} {:negative true :number [5 3]}) )))
+		(is (= true (equal? {:negative false :number [3 2]} (add {:negative false :number [8 5]} {:negative true :number [5 3]}) )))))
 
 (deftest add-test
 	(add-zero-test)
-	(add-positive-test))
+	(add-positive-test)
+	(add-negative-test)
+	(add-mixed-test))
 
 (deftest subtract-zero-test
 	(testing "subtract zero to zero"

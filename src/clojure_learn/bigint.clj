@@ -134,7 +134,11 @@
 	; if n1 != n2  AND n1 is not greater than n2, then n1 is less than n2
 	(and (not (equal? n1 n2)) (not (greater? n1 n2))))
 
-
+; absolute value
+(defn abs
+	"returns the absolute value of the number"
+	[n]
+	{:negative false :number (n :number)})
 
 ; Private function - add two vectors of numbers without paying attention to the sign
 (defn- -unsigned-add
@@ -164,7 +168,6 @@
 
 	; main body
 	(accumulate [] 0 v1 v2))
-
 
 
 ; Private function - subtract two vectors of numbers without paying attention to the sign
@@ -208,7 +211,7 @@
 						(recur new_acc (rest v1) (rest v2)))))))
 
 	; main body
-	(accumulate [] v1 v2))
+	(-trim (accumulate [] v1 v2)))
 
 
 ; add two bigint
@@ -220,14 +223,19 @@
 		v2  (n2 :number)
 		]
 		(println "** add called **")
-		; if the signs are the same, then it is a simple add
-		(if (= (n1 :negative) (n2 :negative))
-				{:negative (n1 :negative) :number (-unsigned-add v1 v2)}
-			)))
-
-	; adding positive numbers
-	; adding both negative numbers
-	; adding different sign numbers
+		(if (and (positive? n1) (positive? n2))
+				{:negative false :number (-unsigned-add v1 v2)}
+				(if (and (negative? n1) (negative? n2))
+					{:negative true :number (-unsigned-add v1 v2)}
+					(if (and (positive? n1) (negative? n2))
+						; n1 > 0, n2 < 0
+						(if (greater? (abs n1) (abs n2))
+							{:negative false :number (-unsigned-subtract v1 v2)}
+							{:negative true  :number (-unsigned-subtract v2 v1)})
+						; n1 < 0 n2 > 0
+						(if (greater? (abs n2) (abs n1))
+							{:negative false :number (-unsigned-subtract v2 v1)}
+							{:negative true  :number (-unsigned-subtract v1 v2)}))))))
 
 
 ; subtract bigint
@@ -237,7 +245,7 @@
 	(let [
 		v1	(n1 :number)
 		v2  (n2 :number)
-		result (-trim (-unsigned-subtract v1 v2))
+		result (-unsigned-subtract v1 v2)
 		]
 		(println "** subtract called **")
 		{:negative false :number result}
