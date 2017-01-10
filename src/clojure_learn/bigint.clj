@@ -1,5 +1,4 @@
 (ns clojure-learn.bigint
-	(:require [clojure.string :as str])
  	(:gen-class))
 
 ; Functions for big integer arithmetic - on arbitarily large 
