@@ -38,10 +38,14 @@ lein test :only clojure-learn.bigint-test/name_of_the_test
 ```
 
 ## References
-### Markdown
 * [Github markdown editor and viewer](http://dillinger.io/)
+* [Clojars](https://clojars.org/) - repo for open source clojure modules 
+
 
 ## TODO
+### General
+* Support for debug printing
+
 ### bigint
 * Add support for negative numbers
 
