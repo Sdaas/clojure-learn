@@ -100,10 +100,17 @@
 		(is (= true (equal? {:negative false :number [3 5 4 5]}  (add {:negative false :number [1 2]} {:negative false :number [2 3 4 5]}) ))))
 	(testing "with carry"
 		(is (= true (equal? {:negative false :number [2 7]}  (add {:negative false :number [3 2]} {:negative false :number [9 4]}) )))
-		(is (= true (equal? {:negative false :number [2 1 1]}  (add {:negative false :number [7 4]} {:negative false :number [5 6]}) )))
+		(is (= true (equal? {:negative false :number [2 1 1]}  (add {:negative false :number [7 4]} {:negative false :number [5 6]}) )))))
 
+
+(deftest subtract-positive-test
+	(testing "same size no borrow"
+		(is (= true (equal? {:negative false :number [2 1]} (subtract {:negative false :number [5 3]} {:negative false :number [3 2]}) )))
 
 		)
+
 	)
+
+
 
 
