@@ -10,11 +10,6 @@
 ; :negative : set to true for negative numbers. false otherwise
 ; :number   : vector where the nth index represents  10^n
 ;
-; POSITIVE and NEGATIVE numbers
-; ZERO
-; ADDITION, SUBTRACTION, MULTIPLICATION, DIV, MOD
-; EQUALITY, GREATER THAN, SMALLER THAN
-;
 
 (defn- -trim
 	"Remove any unncessary leading zeros"
@@ -238,6 +233,7 @@
 
 
 ; subtract bigint
+; TODO subtract works only for +ve numbers and where v1 > v2
 (defn subtract
 	"Subtract n2 from n1"
 	[n1 n2]

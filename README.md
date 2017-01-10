@@ -47,6 +47,7 @@ lein test :only clojure-learn.bigint-test/name_of_the_test
 * Support for debug printing
 
 ### bigint
-* Add support for negative numbers
+* SUBTRACT works only for +ve numbers and where v1 > v2
+* no support for MULT, DIV, or MOD
 
 
