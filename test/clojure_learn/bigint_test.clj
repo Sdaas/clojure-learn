@@ -102,6 +102,16 @@
 		(is (= true (equal? {:negative false :number [2 7]}  (add {:negative false :number [3 2]} {:negative false :number [9 4]}) )))
 		(is (= true (equal? {:negative false :number [2 1 1]}  (add {:negative false :number [7 4]} {:negative false :number [5 6]}) )))))
 
+(deftest add-negative-test
+	(testing "same size no carry"
+		(is (= true (equal? {:negative true :number [3 5 7]}  (add {:negative true :number [1 2 3]} {:negative true :number [2 3 4]}) ))))
+	(testing "different size no carry"
+		(is (= true (equal? {:negative true :number [3 5 4 5]}  (add {:negative true :number [1 2]} {:negative true :number [2 3 4 5]}) ))))
+	(testing "with carry"
+		(is (= true (equal? {:negative true :number [2 7]}  (add {:negative true :number [3 2]} {:negative true :number [9 4]}) )))
+		(is (= true (equal? {:negative true :number [2 1 1]}  (add {:negative true :number [7 4]} {:negative true :number [5 6]}) )))))
+
+
 (deftest add-test
 	(add-zero-test)
 	(add-positive-test))

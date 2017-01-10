@@ -190,8 +190,10 @@
 		v2  (n2 :number)
 		]
 		(println "** add called **")
-		{:negative false :number (-unsigned-add v1 v2)}
-		))
+		; if the signs are the same, then it is a simple add
+		(if (= (n1 :negative) (n2 :negative))
+				{:negative (n1 :negative) :number (-unsigned-add v1 v2)}
+			)))
 
 	; adding positive numbers
 	; adding both negative numbers
