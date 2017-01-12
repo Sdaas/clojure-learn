@@ -5,6 +5,11 @@ TODO Description
 ## List of Modules
 * `bigint`  : For infinite precision integer arithmetic
 
+## Using the Gorilla Repl
+
+* Add `  :plugins [[lein-gorilla "0.4.0"]]` to `project.clj`
+* Run `lein gorilla` to launch the repl
+
 ## Adding a new module
 To add a new module called `XXX`
 
@@ -40,6 +45,7 @@ lein test :only clojure-learn.bigint-test/name_of_the_test
 ## References
 * [Github markdown editor and viewer](http://dillinger.io/)
 * [Clojars](https://clojars.org/) - repo for open source clojure modules 
+* [Gorilla Repl](http://gorilla-repl.org/) - A notebook type repl for Clojure (think Jupyter ...)
 
 
 ## TODO

@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/clojure "1.8.0"]]
   :main ^:skip-aot clojure-learn.core
   :target-path "target/%s"
+  :plugins [[lein-gorilla "0.4.0"]]
   :profiles {:uberjar {:aot :all}})
