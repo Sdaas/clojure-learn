@@ -7,6 +7,7 @@ TODO Description
 * `diagnonal` :
 * `triplet` : 
 * `clock`   : [convert time from 12-hour format to 24-hour format](https://www.hackerrank.com/challenges/time-conversion)
+* `position` : [find the index of the given number in an array](https://www.hackerrank.com/challenges/tutorial-intro)
 
 ## Using the Gorilla Repl
 
