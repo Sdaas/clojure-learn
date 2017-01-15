@@ -4,6 +4,9 @@ TODO Description
 
 ## List of Modules
 * `bigint`  : For infinite precision integer arithmetic
+* `diagnonal` :
+* `triplet` : 
+* `clock`   : [convert time from 12-hour format to 24-hour format](https://www.hackerrank.com/challenges/time-conversion)
 
 ## Using the Gorilla Repl
 
