@@ -14,6 +14,12 @@
   (:require [clojure.test :refer :all]
             [clojure-learn.moon :refer :all]))
 
+
+(deftest merge-test
+	(testing "merge-test"
+		(is (= #{ #{1 2 3}} (merge-sets #{ #{1 2} #{2 3} } 2 3)))
+		(is (= #{ #{1} #{2 3} #{4}} (merge-sets #{ #{1} #{2} #{3} #{4}} 2 3)))))
+
 (deftest choose-test
  	(testing "ways to choose astronauts from countries"
   		(is (= 0 (ways-to-choose-pair `())))
