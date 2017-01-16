@@ -1,6 +1,6 @@
 (ns clojure-learn.moon
 	(use [clojure.string :only (split triml lower-case)]
-		 [clojure.set :only (union)]))
+		 [clojure.set :only (union difference)]))
 
 ; Solution for ...
 ; https://www.hackerrank.com/challenges/journey-to-the-moon
@@ -48,10 +48,14 @@
 		[s]
 		(or (contains? s a) (contains? s b)))
 
+	;(println "** merge sets called **")
+	;(println sets)
+	;(println a b)
 	(let [
 		aorb  (filter has-a-or-b sets) ; sets that have a or b
 		merged (reduce union aorb) ; merge them into a single set
-		neither (filter (complement has-a-or-b) sets) ; sets that have neither
+		;neither (filter (complement has-a-or-b) sets) 
+		neither (difference sets aorb) ; sets that have neither
 		]
 		(into #{} (conj neither merged))))
 
@@ -80,12 +84,11 @@
 		astronauts (first first-line)
 		allsets    (generate-sets astronauts)
 		pairs      (second first-line)
-		pair-list  (vector (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) ))
+		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
+		merged-sets (reduce #(merge-sets %1 (first %2) (second %2)) allsets pair-list)
+		counts     (map count merged-sets)
 		]
+		(println (ways-to-choose-pair counts))))
 		
-Needs to be VECTOR of VECTORS
-or VECTOR of LISTS
-
-		(reduce #(merge-sets %1 (first %2) (second %2)) allsets [ [1 2]])
 
 
