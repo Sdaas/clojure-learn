@@ -110,6 +110,21 @@
 							]
 							(conj removed-ab merged-ab))))))))
 
+(defn missing-sets
+	"The sets that are missing"
+	[sets astronauts]
+	(let [
+		flattened  (into #{} (flatten-sets sets))
+		missing (filter #(not(contains? flattened %)) (range astronauts))
+		]
+		;(println "missing = " missing)
+		(into #{} (map #(hash-set %) missing))))
+
+(defn singletons-count
+	"The number of singletons"
+	[sets astronauts]
+	(- astronauts (count (flatten-sets sets))))
+
 (defn ways-to-choose-pair
 	"given the number of astronauts from each country"
 	[countries]
@@ -126,15 +141,20 @@
 			]
 			(+ part1 part2))))
 
-(defn missing-sets
-	"The sets that are missing"
-	[sets astronauts]
-	(let [
-		flattened  (into #{} (flatten-sets sets))
-		missing (filter #(not(contains? flattened %)) (range astronauts))
-		]
-		;(println "missing = " missing)
-		(into #{} (map #(hash-set %) missing))))
+(defn ways-to-choose-pair2
+	[sets singletons]
+	;(println "** ways-to-choose-pair2 called **")
+	;(println sets)
+	;(println singletons)
+	(if (empty? sets)
+		(/ (* (dec singletons) singletons) 2)
+		(let [
+			tail  (rest sets)
+			part1 (* (first sets) (+ singletons (reduce + tail)))
+			part2 (ways-to-choose-pair2 (rest sets) singletons)
+			]
+			(+ part1 part2))))
+	
 
 (defn process
 	"The main loop"
@@ -159,11 +179,10 @@
 		pairs      (second first-line)
 		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
 		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
-		all-sets   (union sets (missing-sets sets astronauts))
-		counts     (map count all-sets)
+		counts     (map count sets)
+		singletons (singletons-count sets astronauts) ; number of singletons
 		]
-		;(println "sets" all-sets)
-		(println (ways-to-choose-pair counts))))
+		(println (ways-to-choose-pair2 counts singletons))))
 		
 
 

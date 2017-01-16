@@ -16,9 +16,14 @@
 
 (deftest missing-test
 	(testing "missing"
-		(is (= #{ #{3} #{5}} (missing-sets #{ #{1 2} #{0 4}} 6)))
-		)
-	)
+		(is (= #{ #{3} #{5}} (missing-sets #{ #{1 2} #{0 4}} 6)))))
+
+(deftest singletons-test
+	(testing "singletons count"
+		(is (= 2 (singletons-count #{ #{1 2} #{0 4}} 6)))
+		(is (= 1 (singletons-count #{ #{1 2 3} #{5 4}} 6)))
+		(is (= 0 (singletons-count #{ #{1 2 3} #{0 4 5}} 6)))
+		(is (= 6 (singletons-count #{} 6)))))
 
 (deftest merge-test
 	(testing "merge-test"
@@ -48,3 +53,15 @@
   		(is (= 4 (ways-to-choose-pair `(2 2))))
   		(is (= 26 (ways-to-choose-pair `(4 3 2))))
 		(is (= 23 (ways-to-choose-pair `(7 2 1))))))
+
+(deftest choose2-test
+ 	(testing "ways to choose astronauts from countries"
+  		(is (= 10 (ways-to-choose-pair2 `() 5 )))
+  		(is (= 20 (ways-to-choose-pair2 `(2) 5 )))
+  		(is (= 24 (ways-to-choose-pair2 `(2 3) 3 )))
+  		(is (= 56 (ways-to-choose-pair2 `(4 3 2) 3)))
+		(is (= 23 (ways-to-choose-pair2 `(7 2 1) 0)))))
+
+
+
+
