@@ -175,24 +175,33 @@
 	
 ; The histogram is { k1 v1, k2 v2 .... }
 ; Interpet this as there are v1 groups with k1 members
-(defn ways-to-choose-pair3
+(defn ways-to-choose-pairs-from-histogram
 	"using the histogram"
 	[hist]
 
 	(defn compute
   	[h]
-  	(println "h=" h)
   	(if (empty? h)
   		0
 	  	(let [
 	          k1   (first (first h))
 	          v1   (second (first h))
 	          tail (reduce + (map #( * (first %) (second %)) (rest h))) ; sum(k2.v2 + k3.v3 ...)
-	          p1   (* k1 (+ (/ (* v1 (dec v1)) 2) tail))
+              tmp  (* k1 (/ (* v1 (dec v1)) 2))
+	          p1   (* k1 (+ tmp (* v1 tail)))
 	          ]
 	      	(+ p1 (compute (rest h))))))
-
+  
 	(compute hist))
+
+(defn histogram-from-pair-list
+	[pair-list astronauts]
+	(let [
+		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
+		counts     (map count sets)
+		singletons (singletons-count sets astronauts) ; number of singletons     
+		]
+		(histogram counts singletons)))
 
 (defn process
 	"The main loop"
@@ -216,13 +225,10 @@
 		astronauts (first first-line)
 		pairs      (second first-line)
 		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
-		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
-		counts     (map count sets)
-		singletons (singletons-count sets astronauts) ; number of singletons
-		hist       (histogram counts singletons)
+		hist       (histogram-from-pair-list pair-list astronauts)
 		]
-		(println "histogram" hist)
-		(println (ways-to-choose-pair3 hist))))
+		;(println "histogram" hist)
+		(println (ways-to-choose-pairs-from-histogram hist))))
 		
 
 

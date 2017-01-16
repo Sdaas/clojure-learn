@@ -54,6 +54,12 @@
 		(is (= {2 3 10 2 4 1 1 6} (histogram `(2 2 2 10 10 4) 6)))
 		(is (= {1 6} (histogram `() 6)))))
 
+(deftest histogram-from-pair-list-test
+	(testing "create histogram from pair list"
+		(is (= {2 1, 7 1, 1 1} (histogram-from-pair-list [ [0 2] [1 8] [1 4] [2 8] [2 6] [3 5] [6 9]] 10)))
+		(is (= {3 2, 2 2, 1 0} (histogram-from-pair-list [[0 1][0 2][3 4][3 5][6 7][8 9]] 10 )))
+		(is (= {2 2, 1 96} (histogram-from-pair-list [[1 2] [3 4]] 100)))))
+
 (deftest choose-test
  	(testing "ways to choose astronauts from countries"
   		(is (= 0 (ways-to-choose-pair `())))
@@ -70,6 +76,14 @@
   		(is (= 56 (ways-to-choose-pair2 `(4 3 2) 3)))
 		(is (= 23 (ways-to-choose-pair2 `(7 2 1) 0)))))
 
-
-
-
+(deftest choose3-test
+	(testing "singletons"
+		(is (= 0 (ways-to-choose-pairs-from-histogram {1 1} )))
+		(is (= 1 (ways-to-choose-pairs-from-histogram {1 2} )))
+		(is (= 3 (ways-to-choose-pairs-from-histogram {1 3} )))
+		(is (= 6 (ways-to-choose-pairs-from-histogram {1 4} )))
+		)
+	(testing "choose3"
+		(is (= 23 (ways-to-choose-pairs-from-histogram {2 1, 7 1, 1 1} )))
+		(is (= 25 (ways-to-choose-pairs-from-histogram {5 2, 1 0} )))
+		(is (= 13 (ways-to-choose-pairs-from-histogram {2 2, 1 2} )))))
