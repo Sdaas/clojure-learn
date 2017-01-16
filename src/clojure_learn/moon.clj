@@ -35,10 +35,6 @@
 ; What about "astronaut #4" ? Turns out he is in his own set. So in
 ; this case, there are _THREE_ sets {0 1 2} {3 5} {4}
 
-(defn generate-sets
-	"Generate n sets, each having a single member in the range 0 .. n-1"
-	[n]
-	(into #{} (map #(hash-set %1) (range n))))
 
 ; flatten-sets taken from https://gist.github.com/bdesham/1005837
 (defn flatten-sets
@@ -46,28 +42,6 @@
   [v]
   (filter (complement set?)
           (rest (tree-seq set? seq (set v)))))
-
-(defn merge-sets
-	"Merge"
-	[sets a b]
-
-	(defn has-a-or-b
-		[s]
-		(or (contains? s a) (contains? s b)))
-
-	;(println "** merge sets called **")
-	;(println sets)
-	;(println a b)
-	(let [
-		;aorb  (filter has-a-or-b sets) ; sets that have a or b
-		aa (some #(when (contains? % a) %) sets) ; the set with a
-		bb (some #(when (contains? % b) %) sets) ; the set with b
-		aorb (hash-set aa bb)
-		merged (reduce union aorb) ; merge them into a single set
-		;neither (filter (complement has-a-or-b) sets) 
-		neither (difference sets aorb) ; sets that have neither
-		]
-		(into #{} (conj neither merged))))
 
 (defn append-to-sets
 	"Modify the sets based on the new input pair"
@@ -110,16 +84,6 @@
 							]
 							(conj removed-ab merged-ab))))))))
 
-(defn missing-sets
-	"The sets that are missing"
-	[sets astronauts]
-	(let [
-		flattened  (into #{} (flatten-sets sets))
-		missing (filter #(not(contains? flattened %)) (range astronauts))
-		]
-		;(println "missing = " missing)
-		(into #{} (map #(hash-set %) missing))))
-
 (defn singletons-count
 	"The number of singletons"
 	[sets astronauts]
@@ -143,36 +107,15 @@
 	
 	(conj (histogram-inner {} sets) {1 singletons})) ; add the data for singletons
 
-(defn ways-to-choose-pair
-	"given the number of astronauts from each country"
-	[countries]
-	; The list contains the number of astronauts in each set
-	; Suppose the list is A B C D E .... 
-	; Then soln(A B C D E) = A*B + A*C + A*D + A*E + soln(B C D E)
-	; Obviously soln(E) = 0
-	(if (< (count countries) 2 )
-		0
-		(let [
-			tail (rest countries)
-			part1 (* (first countries) (reduce + tail))
-			part2 (ways-to-choose-pair tail)
-			]
-			(+ part1 part2))))
+(defn histogram-from-pair-list
+	[pair-list astronauts]
+	(let [
+		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
+		counts     (map count sets)
+		singletons (singletons-count sets astronauts) ; number of singletons     
+		]
+		(histogram counts singletons)))
 
-(defn ways-to-choose-pair2
-	[sets singletons]
-	;(println "** ways-to-choose-pair2 called **")
-	;(println sets)
-	;(println singletons)
-	(if (empty? sets)
-		(/ (* (dec singletons) singletons) 2)
-		(let [
-			tail  (rest sets)
-			part1 (* (first sets) (+ singletons (reduce + tail)))
-			part2 (ways-to-choose-pair2 (rest sets) singletons)
-			]
-			(+ part1 part2))))
-	
 ; The histogram is { k1 v1, k2 v2 .... }
 ; Interpet this as there are v1 groups with k1 members
 (defn ways-to-choose-pairs-from-histogram
@@ -194,28 +137,7 @@
   
 	(compute hist))
 
-(defn histogram-from-pair-list
-	[pair-list astronauts]
-	(let [
-		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
-		counts     (map count sets)
-		singletons (singletons-count sets astronauts) ; number of singletons     
-		]
-		(histogram counts singletons)))
 
-(defn process
-	"The main loop"
-	[]
-	(let [
-		first-line (map #(Integer/parseInt %) (split (read-line) #"\s+"))
-		astronauts (first first-line)
-		allsets    (generate-sets astronauts)
-		pairs      (second first-line)
-		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
-		merged-sets (reduce #(merge-sets %1 (first %2) (second %2)) allsets pair-list)
-		counts     (map count merged-sets)
-		]
-		(println (ways-to-choose-pair counts))))
 
 (defn process2
 	"The main loop - version 2"

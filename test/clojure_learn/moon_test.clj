@@ -14,9 +14,6 @@
   (:require [clojure.test :refer :all]
             [clojure-learn.moon :refer :all]))
 
-(deftest missing-test
-	(testing "missing"
-		(is (= #{ #{3} #{5}} (missing-sets #{ #{1 2} #{0 4}} 6)))))
 
 (deftest singletons-test
 	(testing "singletons count"
@@ -24,11 +21,6 @@
 		(is (= 1 (singletons-count #{ #{1 2 3} #{5 4}} 6)))
 		(is (= 0 (singletons-count #{ #{1 2 3} #{0 4 5}} 6)))
 		(is (= 6 (singletons-count #{} 6)))))
-
-(deftest merge-test
-	(testing "merge-test"
-		(is (= #{ #{1 2 3}} (merge-sets #{ #{1 2} #{2 3} } 2 3)))
-		(is (= #{ #{1} #{2 3} #{4}} (merge-sets #{ #{1} #{2} #{3} #{4}} 2 3)))))
 
 (deftest append-test
 	(testing "first of pair found in a single set"
@@ -59,22 +51,6 @@
 		(is (= {2 1, 7 1, 1 1} (histogram-from-pair-list [ [0 2] [1 8] [1 4] [2 8] [2 6] [3 5] [6 9]] 10)))
 		(is (= {3 2, 2 2, 1 0} (histogram-from-pair-list [[0 1][0 2][3 4][3 5][6 7][8 9]] 10 )))
 		(is (= {2 2, 1 96} (histogram-from-pair-list [[1 2] [3 4]] 100)))))
-
-(deftest choose-test
- 	(testing "ways to choose astronauts from countries"
-  		(is (= 0 (ways-to-choose-pair `())))
-  		(is (= 0 (ways-to-choose-pair `(5))))
-  		(is (= 4 (ways-to-choose-pair `(2 2))))
-  		(is (= 26 (ways-to-choose-pair `(4 3 2))))
-		(is (= 23 (ways-to-choose-pair `(7 2 1))))))
-
-(deftest choose2-test
- 	(testing "ways to choose astronauts from countries"
-  		(is (= 10 (ways-to-choose-pair2 `() 5 )))
-  		(is (= 20 (ways-to-choose-pair2 `(2) 5 )))
-  		(is (= 24 (ways-to-choose-pair2 `(2 3) 3 )))
-  		(is (= 56 (ways-to-choose-pair2 `(4 3 2) 3)))
-		(is (= 23 (ways-to-choose-pair2 `(7 2 1) 0)))))
 
 (deftest choose3-test
 	(testing "singletons"
