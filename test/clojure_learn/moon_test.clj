@@ -45,7 +45,15 @@
 	; If the sets are {1 2 3} {4 5} 
 	; for [3 4], the answer will be {1 2 3 4 5} merged the sets
 	; for [5 6], the answer will be {1 2 3} {4 5 6} added to one set
-	
+
+(deftest histogram-test
+	(testing "zero singletons"
+		(is (= {2 3 10 2 4 1 1 0} (histogram `(2 2 2 10 10 4) 0)))
+		(is (= {1 0} (histogram `() 0))))
+	(testing "non-zero singletons"
+		(is (= {2 3 10 2 4 1 1 6} (histogram `(2 2 2 10 10 4) 6)))
+		(is (= {1 6} (histogram `() 6)))))
+
 (deftest choose-test
  	(testing "ways to choose astronauts from countries"
   		(is (= 0 (ways-to-choose-pair `())))
