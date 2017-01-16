@@ -6,4 +6,4 @@
 
 (defn -main
   [& args]
-  (clojure-learn.moon/process))
+  (clojure-learn.moon/process2))

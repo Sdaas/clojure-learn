@@ -52,6 +52,13 @@ lein test :only clojure-learn.bigint-test/name_of_the_test
 * [Gorilla Repl](http://gorilla-repl.org/) - A notebook type repl for Clojure (think Jupyter ...)
 
 
+Profling Clojure Code https://torsten.io/stdout/how-to-profile-clojure-code/
+using (VisualVM)[https://visualvm.github.io/]
+
+## HackerRank Notes
+
+The [HackerRank Environment for Clojure](https://www.hackerrank.com/environment) imposes a 8second time limit for execution, and a maximum memory consumption of 512MB
+
 ## TODO
 ### General
 * Support for debug printing

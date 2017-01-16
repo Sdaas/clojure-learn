@@ -40,6 +40,13 @@
 	[n]
 	(into #{} (map #(hash-set %1) (range n))))
 
+; flatten-sets taken from https://gist.github.com/bdesham/1005837
+(defn flatten-sets
+  "Like flatten, but pulls elements out of sets instead of sequences."
+  [v]
+  (filter (complement set?)
+          (rest (tree-seq set? seq (set v)))))
+
 (defn merge-sets
 	"Merge"
 	[sets a b]
@@ -52,12 +59,56 @@
 	;(println sets)
 	;(println a b)
 	(let [
-		aorb  (filter has-a-or-b sets) ; sets that have a or b
+		;aorb  (filter has-a-or-b sets) ; sets that have a or b
+		aa (some #(when (contains? % a) %) sets) ; the set with a
+		bb (some #(when (contains? % b) %) sets) ; the set with b
+		aorb (hash-set aa bb)
 		merged (reduce union aorb) ; merge them into a single set
 		;neither (filter (complement has-a-or-b) sets) 
 		neither (difference sets aorb) ; sets that have neither
 		]
 		(into #{} (conj neither merged))))
+
+(defn append-to-sets
+	"Modify the sets based on the new input pair"
+	; If the sets are {1 2 3} {4 5} 
+	; for [3 4], the answer will be {1 2 3 4 5} merged the sets
+	; for [5 6], the answer will be {1 2 3} {4 5 6} added to one set
+	; for [6 7], the answer will be {1 2 3} {4 5} {6,7}
+	[sets pair]
+	;(println "append-to-sets called")
+	;(println sets)
+	;(println pair)
+
+	(defn update-sets
+		[set-x y]
+		(let [
+			removed-x (into #{} (remove #{set-x} sets)) ; remove the original set-a
+			modified-x (conj set-x y)     ; update the set-a
+			]
+			(conj removed-x modified-x)))
+
+	(let [
+		a 	(first pair)
+		b   (second pair)
+		set-a (some #(when (contains? % a) %) sets) ; the set containing "a"
+		set-b (some #(when (contains? % b) %) sets) ; the set containing "b"
+		]
+		(if (and (nil? set-a) (nil? set-b))
+			(conj sets (into #{} pair)) ; no match. so create {a b} and append
+			(if (and (not (nil? set-a)) (nil? set-b))
+				(update-sets set-a b)
+				(if (and (nil? set-a) (not (nil? set-b)))
+					(update-sets set-b a)
+					(if (= set-a set-b) ; both elements of pair were in the same set
+						sets 			; nothing to do
+										; both are present but in different sets
+						(let [
+							removed-a (into #{} (remove #{set-a} sets))
+							removed-ab (into #{} (remove #{set-b} removed-a))
+							merged-ab  (union set-a set-b)
+							]
+							(conj removed-ab merged-ab))))))))
 
 (defn ways-to-choose-pair
 	"given the number of astronauts from each country"
@@ -75,6 +126,15 @@
 			]
 			(+ part1 part2))))
 
+(defn missing-sets
+	"The sets that are missing"
+	[sets astronauts]
+	(let [
+		flattened  (into #{} (flatten-sets sets))
+		missing (filter #(not(contains? flattened %)) (range astronauts))
+		]
+		;(println "missing = " missing)
+		(into #{} (map #(hash-set %) missing))))
 
 (defn process
 	"The main loop"
@@ -88,6 +148,21 @@
 		merged-sets (reduce #(merge-sets %1 (first %2) (second %2)) allsets pair-list)
 		counts     (map count merged-sets)
 		]
+		(println (ways-to-choose-pair counts))))
+
+(defn process2
+	"The main loop - version 2"
+	[]
+	(let [
+		first-line (map #(Integer/parseInt %) (split (read-line) #"\s+"))
+		astronauts (first first-line)
+		pairs      (second first-line)
+		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
+		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
+		all-sets   (union sets (missing-sets sets astronauts))
+		counts     (map count all-sets)
+		]
+		;(println "sets" all-sets)
 		(println (ways-to-choose-pair counts))))
 		
 
