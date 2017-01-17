@@ -83,54 +83,23 @@
 	; or be a singleton. This gives an easy way to compute number of singletons
  	(- astronauts (reduce + counts)))
 
-(defn histogram
-	[sets singletons]
+(defn sets-from-pair-list
+	[pair-list]
+	(reduce #(append-to-sets %1 %2) #{} pair-list))
 
-	(defn histogram-inner
-		[h s]
-      	;(println h)
-		(if (empty? s)
-			h
-			(let [
-				k1  (first s)
-				v1  (or (h k1) 0)  ; if key is not present then v1 is 0
-                h2	(conj h {k1 (inc v1)}) ; new map where the key's value is updated by 1
-				]
-              	;(println h2)
-				(histogram-inner h2 (rest s)))))
-	
-	(conj (histogram-inner {} sets) {1 singletons})) ; add the data for singletons
-
-(defn histogram-from-pair-list
-	[pair-list astronauts]
-	(let [
-		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
-		counts     (map count sets)
-		s 		   (singletons counts astronauts) ; number of singletons     
-		]
-		(histogram counts s)))
-
-; The histogram is { k1 v1, k2 v2 .... }
-; Interpet this as there are v1 groups with k1 members
-(defn ways-to-choose-pairs-from-histogram
-	"using the histogram"
-	[hist]
-
-	(defn compute
-  	[h]
-  	(if (empty? h)
-  		0
-	  	(let [
-	          k1   (first (first h))
-	          v1   (second (first h))
-	          tail (reduce + (map #( * (first %) (second %)) (rest h))) ; sum(k2.v2 + k3.v3 ...)
-              tmp  (* k1 (/ (* v1 (dec v1)) 2))
-	          p1   (* k1 (+ tmp (* v1 tail)))
-	          ]
-	      	(+ p1 (compute (rest h))))))
-  
-	(compute hist))
-
+(defn ways-to-choose-pairs
+	"compute the number of ways to choose pair"
+	[counts astronauts]
+	; counts : The number of astronauts in each group
+	; s      : number of astronauts
+	(if (empty? counts)
+		(/ (* astronauts (dec astronauts)) 2)
+		(let [
+			a1    (first counts) ; astronauts in 1st group
+			other (- astronauts a1) ; how many other astronauts
+			pair1 (* a1 other)  ; ways to pair astronauts from 1st group  
+			]
+			(+ pair1 (ways-to-choose-pairs (rest counts) (- astronauts a1))))))
 
 
 (defn process2
@@ -141,10 +110,11 @@
 		astronauts (first first-line)
 		pairs      (second first-line)
 		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
-		hist       (histogram-from-pair-list pair-list astronauts)
+		sets       (sets-from-pair-list pair-list)
+		counts     (map count sets)
 		]
 		;(println "histogram" hist)
-		(println (ways-to-choose-pairs-from-histogram hist))))
+		(println (ways-to-choose-pairs counts astronauts))))
 		
 
 
