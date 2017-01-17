@@ -35,6 +35,93 @@
 ; this case, there are _THREE_ sets {0 1 2} {3 5} {4}
 
 
+(defn create-sets
+	"Create the sets from the pair list"
+	[pair-list]
+
+
+	(defn inner-create-sets
+		[astro-map group-map pair-list country-index]
+		; astro : map of astro # to country #
+		; group : map of country # to set whose members are astros
+		(println "** called **")
+		(println "astro-map = " astro-map)
+		(println "group-map = " group-map)
+		(println "pair-list = " pair-list)
+		(if (empty? pair-list)
+			(into #{} (vals group-map)) ; return the values of the group-map as a set
+			(let [
+				p1  (first pair-list)
+				a   (first p1)
+				b   (second p1)
+				isa (some? (astro-map a))  ; is "a" present in  map
+				isb (some? (astro-map b))  ; is "b" present in  map
+				]
+
+				(cond
+					(and (not isa) (not isb))
+
+						(do
+						; neither a nor b are present in the astro-map. 
+						; so we are encountering both for first time
+						(println "neither a/b present in astro-map")
+						(let [
+							cc  (inc country-index) 
+							new-astro (conj (conj astro-map {a cc}) {b cc})
+							new-group (conj group-map {cc #{a b}})
+							]
+							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+					
+					(and isa (not isb))
+						(do
+						; a is present but not b
+						(println "only a is present in astro-map")
+						(let [
+							cc  (inc country-index)
+							country-a (astro-map a)
+							new-astro (conj astro-map {b country-a})
+							country-set (group-map country-a)     ; get the set for country-a
+							new-country-set  (conj country-set b) ; add b to that set
+							new-group (conj group-map {country-a new-country-set})
+							]
+							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+					
+					(and (not isa) isb)
+						(do
+						; b is present but not a
+						(println "only b is present in astro-map")
+						(let [
+							cc  (inc country-index)
+							country-b (astro-map b)
+							new-astro (conj astro-map {a country-b})
+							country-set (group-map country-b)     ; get the set for country-a
+							new-country-set  (conj country-set a) ; add b to that set
+							new-group (conj group-map {country-b new-country-set})
+							]
+							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+					
+					(and isa isb)
+						(do
+						; both a and b are present
+						(println "both a and b is present in astro-map")
+						(let [
+							cc  (inc country-index)
+							country-a  (astro-map a)    
+							country-b  (astro-map b)
+							set-a      (group-map country-a)
+							set-b      (group-map country-b) 
+							new-set-a  (clojure.set/union set-a set-b) 
+							new-group  (conj (dissoc group-map country-b) {country-a new-set-a})
+							tmp-astro (apply dissoc astro-map set-b) ; REMOVE the entries for astronauts in set b
+ 							new-astro (reduce #(conj %1 {%2 country-a}) tmp-astro set-b)
+							]
+							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+				))))
+
+	(inner-create-sets {} {} pair-list 0)	
+)
+
+
 (defn append-to-sets
 	"Modify the sets based on the new input pair"
 	; If the sets are {1 2 3} {4 5} 
@@ -110,7 +197,7 @@
 		astronauts (first first-line)
 		pairs      (second first-line)
 		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
-		sets       (sets-from-pair-list pair-list)
+		sets       (time (sets-from-pair-list pair-list))
 		counts     (map count sets)
 		]
 		;(println "histogram" hist)

@@ -14,6 +14,23 @@
   (:require [clojure.test :refer :all]
             [clojure-learn.moon :refer :all]))
 
+(deftest create-sets-test
+	(testing "disjoint"
+		(is (= #{ #{0 1} #{2 3} #{4 5} } (create-sets [[0 1] [2 3] [4 5]] ))))
+	(testing "one element in pair is present")
+		(is (= #{ #{0 1} #{2 3 4} } (create-sets [[0 1] [2 3] [3 4]] )))
+		(is (= #{ #{0 1} #{2 3 4} } (create-sets [[0 1] [2 3] [4 3]] )))
+		(is (= #{ #{0 3 4} #{1 2 5} } (create-sets [[0 3] [1 2] [3 4] [2 5]] )))
+	(testing "both elements present"
+		(is (= #{ #{0 2 4 5}} (create-sets [[0 2] [4 5] [2 4]] )))
+		(is (= #{ #{0 2 4 5}} (create-sets [[0 2] [4 5] [2 4]] ))))
+	(testing "misc"
+		; { 0 1 2 4 6 8  9} {3 5}
+		(is (= #{ #{0 1 2 4 6 8 9} #{3 5}} (create-sets [ [0 2] [1 8] [1 4] [2 8] [2 6] [3 5] [6 9]] )))
+		; { 0 1 2} {3 4 5} {6 7} {8 9} 
+		(is (= #{#{0 1 2} #{3 4 5} #{6 7} #{8 9}} (create-sets [[0 1][0 2][3 4][3 5][6 7][8 9]] )))
+		; {1 2} {3 4} 
+		(is (= #{ #{1 2} #{3 4}} (create-sets[[1 2] [3 4]] )))))
 
 (deftest append-test
 	(testing "first of pair found in a single set"
@@ -62,9 +79,6 @@
 		; groups ; 3 3 3 => 3x6 + 3x3  = 18 + 9 = 27
 		(is (= 27 (ways-to-choose-pairs `(3 3 3) 9))))); groups : 3 3 3
 
-(deftest temp
-	(testing "placeholder for a single test"
-		(is (= 21 (ways-to-choose-pairs `(3 4) 9)))
 
-	)) ; all singletons
+
 
