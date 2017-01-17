@@ -17,10 +17,10 @@
 
 (deftest singletons-test
 	(testing "singletons count"
-		(is (= 2 (singletons-count #{ #{1 2} #{0 4}} 6)))
-		(is (= 1 (singletons-count #{ #{1 2 3} #{5 4}} 6)))
-		(is (= 0 (singletons-count #{ #{1 2 3} #{0 4 5}} 6)))
-		(is (= 6 (singletons-count #{} 6)))))
+		(is (= 2 (singletons `(2 2) 6)))
+		(is (= 1 (singletons `(3 2) 6)))
+		(is (= 0 (singletons `(3 3) 6)))
+		(is (= 6 (singletons `() 6)))))
 
 (deftest append-test
 	(testing "first of pair found in a single set"

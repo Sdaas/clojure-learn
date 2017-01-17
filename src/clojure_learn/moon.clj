@@ -4,7 +4,6 @@
 
 ; Solution for ...
 ; https://www.hackerrank.com/challenges/journey-to-the-moon
-;
 
 ; There are two parts to the solution
 ; (a) Find out of many countries there are, and who are the astronauts
@@ -35,13 +34,6 @@
 ; What about "astronaut #4" ? Turns out he is in his own set. So in
 ; this case, there are _THREE_ sets {0 1 2} {3 5} {4}
 
-
-; flatten-sets taken from https://gist.github.com/bdesham/1005837
-(defn flatten-sets
-  "Like flatten, but pulls elements out of sets instead of sequences."
-  [v]
-  (filter (complement set?)
-          (rest (tree-seq set? seq (set v)))))
 
 (defn append-to-sets
 	"Modify the sets based on the new input pair"
@@ -84,10 +76,12 @@
 							]
 							(conj removed-ab merged-ab))))))))
 
-(defn singletons-count
+(defn singletons
 	"The number of singletons"
-	[sets astronauts]
-	(- astronauts (count (flatten-sets sets))))
+	[counts astronauts]
+	; An astronaut will wither appear in "sets" (if there are other astronauts from that countr)
+	; or be a singleton. This gives an easy way to compute number of singletons
+ 	(- astronauts (reduce + counts)))
 
 (defn histogram
 	[sets singletons]
@@ -112,9 +106,9 @@
 	(let [
 		sets 	   (reduce #(append-to-sets %1 %2) #{} pair-list)
 		counts     (map count sets)
-		singletons (singletons-count sets astronauts) ; number of singletons     
+		s 		   (singletons counts astronauts) ; number of singletons     
 		]
-		(histogram counts singletons)))
+		(histogram counts s)))
 
 ; The histogram is { k1 v1, k2 v2 .... }
 ; Interpet this as there are v1 groups with k1 members
