@@ -32,35 +32,12 @@
 		; {1 2} {3 4} 
 		(is (= #{ #{1 2} #{3 4}} (create-sets[[1 2] [3 4]] )))))
 
-(deftest append-test
-	(testing "first of pair found in a single set"
-		(is (= #{ #{1 2 3 7} #{4 5}} (append-to-sets #{ #{1 2 3} #{4 5}} [2 7] ))))
-	(testing "second of pair found in a single set"
-		(is (= #{ #{1 2 3} #{4 5 8}} (append-to-sets #{ #{1 2 3} #{4 5}} [8 4] ))))
-	(testing "both found in a single set"
-			(is (= #{ #{1 2 3} #{4 5}} (append-to-sets #{ #{1 2 3} #{4 5}} [1 3] ))))
-	(testing "both found in two different sets"
-		(is (= #{ #{1 2 3 4 5} #{6 7}} (append-to-sets #{ #{1 2 3} #{4 5} #{6 7}} [2 4] ))))
-	(testing "no match"
-		(is (= #{ #{1 2 3} #{4 5} #{6 7}} (append-to-sets #{ #{1 2 3} #{4 5}} [6 7] )))))
-
-
 (deftest singletons-test
 	(testing "singletons count"
 		(is (= 2 (singletons `(2 2) 6)))
 		(is (= 1 (singletons `(3 2) 6)))
 		(is (= 0 (singletons `(3 3) 6)))
 		(is (= 6 (singletons `() 6)))))
-
-(deftest sets-from-pairlist-test
-	(testing "create the sets given pairlist"
-		; { 0 1 2 4 6 8  9} {3 5}
-		(is (= #{ #{0 1 2 4 6 8 9} #{3 5}} (sets-from-pair-list [ [0 2] [1 8] [1 4] [2 8] [2 6] [3 5] [6 9]] )))
-		; { 0 1 2} {3 4 5} {6 7} {8 9} 
-		(is (= #{#{0 1 2} #{3 4 5} #{6 7} #{8 9}} (sets-from-pair-list [[0 1][0 2][3 4][3 5][6 7][8 9]] )))
-		; {1 2} {3 4} 
-		(is (= #{ #{1 2} #{3 4}} (sets-from-pair-list [[1 2] [3 4]] )))
-))
 
 (deftest ways-test
 	(testing "no singletons"
