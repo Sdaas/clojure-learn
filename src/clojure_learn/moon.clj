@@ -44,10 +44,10 @@
 		[astro-map group-map pair-list country-index]
 		; astro : map of astro # to country #
 		; group : map of country # to set whose members are astros
-		(println "** called **")
-		(println "astro-map = " astro-map)
-		(println "group-map = " group-map)
-		(println "pair-list = " pair-list)
+		;(println "** called **")
+		;(println "astro-map = " astro-map)
+		;(println "group-map = " group-map)
+		;(println "pair-list = " pair-list)
 		(if (empty? pair-list)
 			(into #{} (vals group-map)) ; return the values of the group-map as a set
 			(let [
@@ -64,18 +64,18 @@
 						(do
 						; neither a nor b are present in the astro-map. 
 						; so we are encountering both for first time
-						(println "neither a/b present in astro-map")
+						;(println "neither a/b present in astro-map")
 						(let [
 							cc  (inc country-index) 
 							new-astro (conj (conj astro-map {a cc}) {b cc})
 							new-group (conj group-map {cc #{a b}})
 							]
-							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+							(recur new-astro new-group (rest pair-list) cc)))
 					
 					(and isa (not isb))
 						(do
 						; a is present but not b
-						(println "only a is present in astro-map")
+						;(println "only a is present in astro-map")
 						(let [
 							cc  (inc country-index)
 							country-a (astro-map a)
@@ -84,12 +84,12 @@
 							new-country-set  (conj country-set b) ; add b to that set
 							new-group (conj group-map {country-a new-country-set})
 							]
-							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+							(recur new-astro new-group (rest pair-list) cc)))
 					
 					(and (not isa) isb)
 						(do
 						; b is present but not a
-						(println "only b is present in astro-map")
+						;(println "only b is present in astro-map")
 						(let [
 							cc  (inc country-index)
 							country-b (astro-map b)
@@ -98,12 +98,12 @@
 							new-country-set  (conj country-set a) ; add b to that set
 							new-group (conj group-map {country-b new-country-set})
 							]
-							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+							(recur new-astro new-group (rest pair-list) cc)))
 					
 					(and isa isb)
 						(do
 						; both a and b are present
-						(println "both a and b is present in astro-map")
+						;(println "both a and b is present in astro-map")
 						(let [
 							cc  (inc country-index)
 							country-a  (astro-map a)    
@@ -115,7 +115,7 @@
 							tmp-astro (apply dissoc astro-map set-b) ; REMOVE the entries for astronauts in set b
  							new-astro (reduce #(conj %1 {%2 country-a}) tmp-astro set-b)
 							]
-							(inner-create-sets new-astro new-group (rest pair-list) cc)))
+							(recur new-astro new-group (rest pair-list) cc)))
 				))))
 
 	(inner-create-sets {} {} pair-list 0)	
@@ -197,7 +197,8 @@
 		astronauts (first first-line)
 		pairs      (second first-line)
 		pair-list  (for [temp (range pairs)]  (map #(Integer/parseInt %) (split (read-line) #"\s+") ) )
-		sets       (time (sets-from-pair-list pair-list))
+		;sets       (time (sets-from-pair-list pair-list))
+		sets        (time (create-sets pair-list))
 		counts     (map count sets)
 		]
 		;(println "histogram" hist)
