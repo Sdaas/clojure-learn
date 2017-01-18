@@ -1,9 +1,9 @@
 (ns clojure-learn.core
-	(:require [clojure-learn.moon :refer :all])
+	(:require [clojure-learn.circular :refer :all])
 	(use [clojure.string :only (split triml)])
  	(:gen-class))
 
 
 (defn -main
   [& args]
-  (clojure-learn.moon/process2))
+  (clojure-learn.circular/process))
