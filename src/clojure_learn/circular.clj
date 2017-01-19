@@ -52,13 +52,9 @@
 		xlist (map #(solve n k %) qlist)
 		answer (map #(nth data %) xlist)
 		]
-		(println n k q)
-		(println data)
-		(println qlist)
-		(println xlist)
-		(println answer)
-		(map #(println %) answer))) ; <== last line not working
+		(doseq [i answer] (println i))))
 		
+
 
 
 		
