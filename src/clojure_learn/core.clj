@@ -1,9 +1,9 @@
 (ns clojure-learn.core
-	(:require [clojure-learn.circular :refer :all])
+	(:require [clojure-learn.modfib :refer :all])
 	(use [clojure.string :only (split triml)])
  	(:gen-class))
 
 
 (defn -main
   [& args]
-  (clojure-learn.circular/process))
+  (clojure-learn.modfib/process))
