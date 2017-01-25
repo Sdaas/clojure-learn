@@ -1,5 +1,5 @@
 (ns clojure-learn.core
-	(:require [clojure-learn.modfib :refer :all])
+	(:require [clojure-learn.pdfviewer :refer :all])
 	(use [clojure.string :only (split triml)])
  	(:gen-class))
 
