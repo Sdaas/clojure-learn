@@ -23,3 +23,9 @@
 (deftest pair-test
   (testing "create pairs from list of three numbers"
     (is (= '((1 3) (1 2) (2 3)) (pairs '(1 2 3))))))
+
+(deftest divisible-test
+	(testing "number of pairs divisible by k"
+		(is (= 0 (divisible-pairs 1 '())))
+		(is (= 0 (divisible-pairs 5 '(2 7 9))))
+		(is (= 5 (divisible-pairs 3 '(1 3 2 6 1 2))))))
