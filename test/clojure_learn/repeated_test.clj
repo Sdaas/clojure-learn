@@ -15,9 +15,23 @@
             [clojure-learn.repeated :refer :all]))
 
 (deftest occurences-test
-	(testing "zero occurrences"
-		(is (= 0 (occurences "hello" 0)))
-		(is (= 0 (occurences "aaaaaa" 0)))
-		(is (= 0 (occurences "hello" 3)))
-		(is (= 0 (occurences "hello" 12)))
+	(testing "Number of occurences of a letter in a string"
+		(is (= 0 (occurences "hello" \a)))
+		(is (= 6 (occurences "aaaaaa" \a)))
+		(is (= 2 (occurences "papal" \a)))
 	))
+
+(deftest occurences-n-test
+	(testing "zero occurrences"
+		(is (= 0 (occurences-n "hello" 0 \a)))
+		(is (= 0 (occurences-n "aaaaaa" 0 \a)))
+		(is (= 0 (occurences-n "hello" 3 \a)))
+		(is (= 0 (occurences-n "hello" 12 \a))))
+	(testing "just the letter a"
+		(is (= 1 (occurences-n "a" 1 \a)))
+		(is (= 10 (occurences-n "aaa" 10 \a)))
+		(is (= 3765 (occurences-n "aaaaa" 3765 \a))))
+	(testing "words"
+		(is (= 0 (occurences-n "baar" 1 \a)))
+		(is (= 2 (occurences-n "baar" 3 \a)))
+		(is (= 21 (occurences-n "baar" 42 \a)))))
