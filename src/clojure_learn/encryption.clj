@@ -22,7 +22,7 @@
     ([acc s len]
         (cond
             (empty? s) acc
-            (< (count s) 4) (conj acc s)
+            (< (count s) len) (conj acc s)
             :else (recur (conj acc (take len s)) (drop len s) len)
         )))
 
@@ -60,10 +60,10 @@
   "Main program"
 	[& args]
  	(let [
-        str  (read-line)   
-        g    (grid (remove-spaces str))
-        slist    (scan g)
-        s    (tostring slist)
+        str   (remove-spaces (read-line)) 
+        g     (grid str)
+        slist (scan g)
+        s     (tostring slist)
         ]
         (println s)))
 

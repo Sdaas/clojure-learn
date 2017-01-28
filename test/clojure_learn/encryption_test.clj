@@ -25,6 +25,7 @@
 
 (deftest grid-test
 	(testing "convert a sequence into a grid"
+		(is (=  ['(\a \b) '(\c)] (grid '(\a \b \c))))
 		(is (= ['(\h \a \v \e) '(\a \n \i \c) '(\e \d \a \y)] (grid '(\h \a \v \e \a \n \i \c \e \d \a \y))))
 		(is (= ['(\f \e \e \d) '(\t \h \e \d) '(\o \g)] (grid '(\f \e \e \d \t \h \e \d \o \g))))
 	))
@@ -33,6 +34,7 @@
 	(testing "scan the grid vertically"
 		(is (= ['(\h \a \e) '(\a \n \d) '(\v \i \a) '(\e \c \y)] (scan ['(\h \a \v \e) '(\a \n \i \c) '(\e \d \a \y)])))
 		(is (= ['(\f \t \o) '(\e \h \g) '(\e \e) '(\d \d)] (scan ['(\f \e \e \d) '(\t \h \e \d) '(\o \g)] )))
+		(is (= ['(\a \d \g) '(\b \e ) '(\c \f)] (scan ['(\a \b \c) '(\d \e \f) '(\g)] )))
 	))
 
 (deftest string-test
