@@ -18,15 +18,9 @@
         (into #{} (map #(cons node %) paths)))
     
     (cond
-        (first thunder)   #{}  ; if the first cloud is a thundercloud there is no path forward
-        (= (count clouds) 1) #{clouds}
-        (= (count clouds) 2) 
-            (let [
-                n0    (first clouds)
-                r1    (paths (rest clouds) (rest thunder))   ; all the possible paths from the n+1 node
-                p1    (prepend-node-to-paths n0 r1)
-                ]
-                p1)       
+        (empty? clouds)   #{}
+        (first thunder)   #{}  ; if the first cloud is a thundercloud there is no path forward      
+        (= (count clouds) 1) #{clouds}       
         :else 
             (let [
                 n0     (first clouds)
