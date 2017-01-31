@@ -45,6 +45,9 @@
 		(is (= "one minute to six" (to-words "5:59")))
 		(is (= "ten minutes past twelve" (to-words "12:10")))
 		(is (= "ten minutes to one" (to-words "12:50")))
+		(is (= "quarter past three" (to-words "3:15")))
+		(is (= "quarter to four" (to-words "3:45")))
+		(is (= "quarter to one" (to-words "12:45")))
 		))
 
 (deftest word2-test

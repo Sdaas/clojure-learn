@@ -27,6 +27,12 @@
     [h]
     (word-table h))
 
+(defn next-hour
+    [h]
+    (if (= h 12) 
+        (hours-to-word 1)
+        (hours-to-word (inc h))))
+
 (defn to-words
     "convert time to word"
     ([s] (let [
@@ -34,15 +40,17 @@
           ]
           (to-words h m)))
     ([h m] (let [
-        hstring (hours-to-word h)
-        next-hstring (hours-to-word (inc h))
-        mstring (minutes-to-word m)
+        hour-string (hours-to-word h)
+        next-hour-string (next-hour h)
+        minute-string (minutes-to-word m)
         ]
         (cond
-            (= m 0)  (join " " [hstring "o' clock"])
-            (< m 30) (join " " [mstring "past" hstring])
-            (= m 30) (join " " ["half past" hstring])
-            :else    (join " " [mstring "to" next-hstring])))))
+            (= m 0)  (join " " [hour-string "o' clock"])
+            (= m 15) (join " " ["quarter past" hour-string])
+            (< m 30) (join " " [minute-string "past" hour-string])
+            (= m 30) (join " " ["half past" hour-string])
+            (= m 45) (join " " ["quarter to" next-hour-string])
+            :else    (join " " [minute-string "to" next-hour-string])))))
 
 (defn -main
   "Main program"
