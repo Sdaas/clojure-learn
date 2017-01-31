@@ -43,6 +43,21 @@
 		(is (= "twenty minutes to six" (to-words "5:40")))
 		(is (= "thirteen minutes to six" (to-words "5:47")))
 		(is (= "one minute to six" (to-words "5:59")))
+		(is (= "ten minutes past twelve" (to-words "12:10")))
+		(is (= "ten minutes to one" (to-words "12:50")))
 		))
 
+(deftest word2-test
+	(testing "the time in words"
+		(is (= "five o' clock" (to-words 5 0)))
+		(is (= "one minute past five" (to-words 5 01)))
+		(is (= "ten minutes past five" (to-words 5 10)))
+		(is (= "twenty eight minutes past five" (to-words 5 28)))
+		(is (= "half past five" (to-words 5 30)))
+		(is (= "twenty minutes to six" (to-words 5 40)))
+		(is (= "thirteen minutes to six" (to-words 5 47)))
+		(is (= "one minute to six" (to-words 5 59)))
+		(is (= "ten minutes past twelve" (to-words 12 10)))
+		(is (= "ten minutes to one" (to-words 12 50)))
+		))
 

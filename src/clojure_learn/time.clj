@@ -29,25 +29,27 @@
 
 (defn to-words
     "convert time to word"
-    [s]
-    (let [
-        [h m] (map #(Integer/parseInt %) (split s #":"))
+    ([s] (let [
+            [h m] (map #(Integer/parseInt %) (split s #":"))
+          ]
+          (to-words h m)))
+    ([h m] (let [
         hstring (hours-to-word h)
-        hstring2 (hours-to-word (inc h))
+        next-hstring (hours-to-word (inc h))
         mstring (minutes-to-word m)
         ]
         (cond
             (= m 0)  (join " " [hstring "o' clock"])
             (< m 30) (join " " [mstring "past" hstring])
             (= m 30) (join " " ["half past" hstring])
-            :else    (join " " [mstring "to" hstring2]))))
+            :else    (join " " [mstring "to" next-hstring])))))
 
 (defn -main
   "Main program"
 	[& args]
  	(let [
-        [n k]  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
-        cost   (into [] (map #(Integer/parseInt %) (split (read-line) #"\s+")))
+        h (Integer/parseInt (read-line))
+        m (Integer/parseInt (read-line))
         ]
-        (println "foo")))
+        (println (to-words h m))))
 
