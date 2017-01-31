@@ -27,25 +27,36 @@
 ;
 ; if this also does not work, then there is no answer
 
-(defn next 
+(defn my-min
+   "a minimum function that works on both chars and int"
+   [a b]
+   (let [
+        r (compare a b)
+         ]
+         (cond 
+              (= r 0)  a
+              (< r 0) a   ; a < b
+              :else b)))
+
+(defn next-larger-in-list
     "the smallest number in data that is larger than n"
     ; returns nil if no match
     [n data]
     (let [
-         less-than (filter #(> %1 n) data)
+         less-than (filter #(> (compare %1 n) 0 ) data)
          ]
          (if (empty? less-than)
              nil
-             (apply min less-than))))
+             (reduce my-min less-than))))  
 
-(defn remove
+(defn remove-from-list
     "remove x from data"
     [x data]
     (filter #(not (= %1 x)) data)
  )
 
 (defn smallest
-    "the smalesst number than can be made with the digits in data"
+    "the smallest number than can be made with the digits in data"
      [data]
      (sort data))
 
@@ -62,11 +73,11 @@
                (if (not (nil? s1))
                    (cons d1 s1)
                    (let [
-                        n1 (next d1 r1) ; the smallest number in r1 such that r1 > d1
+                        n1 (next-larger-in-list d1 r1) ; the smallest number in r1 such that r1 > d1
                         ]
                         (if (nil? n1)
                               nil
-                              (cons n1 (smallest (cons d1 (remove n1 r1))))))))))
+                              (cons n1 (smallest (cons d1 (remove-from-list n1 r1))))))))))
                   
 
 (defn -main
