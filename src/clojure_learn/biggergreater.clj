@@ -50,10 +50,15 @@
              (reduce my-min less-than))))  
 
 (defn remove-from-list
-    "remove x from data"
-    [x data]
-    (filter #(not (= %1 x)) data)
- )
+   "removes the first occurence of x from data"
+   [x data]
+  
+   (defn pred [item] (not (= 0 (compare x item))))
+   (let [
+        p1 (take-while pred data)
+        p2 (rest (drop-while pred data))
+        ]
+        (concat p1 p2)))
 
 (defn smallest
     "the smallest number than can be made with the digits in data"
@@ -79,13 +84,32 @@
                               nil
                               (cons n1 (smallest (cons d1 (remove-from-list n1 r1))))))))))
                   
+(defn read-n
+    "read n elements from stdin into a vector"
+    [n]
+    (loop [
+            x n 
+            acc []
+        ]
+        (if (= x 0)
+            acc
+            (recur (dec x) (conj acc (read-line))))))
+
+(defn process
+    [data]
+    (let [
+        tmp (next-largest (seq data))
+        ]
+        (if (nil? tmp) "no answer" (apply str tmp))))
+
 
 (defn -main
   "Main program"
 	[& args]
  	(let [
-        h (Integer/parseInt (read-line))
-        m (Integer/parseInt (read-line))
+        n  (Integer/parseInt (read-line))
+        data (read-n n)
+        out  (map #(process %) data)
         ]
-        (println "hello")))
+        (doseq [item out] (println item))))
 

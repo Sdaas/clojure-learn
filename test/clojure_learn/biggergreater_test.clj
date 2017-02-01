@@ -30,6 +30,19 @@
 		(is (nil? (next-larger-in-list \i [\g \a \i \b \f \e \h])))))
 
 
+(deftest remove-from-list-test
+	(testing "simple case"
+		(is (= '(3 1 2 5 4) (remove-from-list 7 '(3 1 2 7 5 4))))
+		(is (= '(\a \b \d) (remove-from-list \c '(\a \b \c \d)))))
+	(testing "with duplicate entries"
+		(is (= '(3 2 1) (remove-from-list 1 '(3 1 2 1))))
+		(is (= '(3 1 2) (remove-from-list 3 '(3 3 1 2))))
+		(is (= '(3 1 2) (remove-from-list 2 '(3 1 2 2))))
+		(is (= '(\a \b \d) (remove-from-list \b '(\a \b \b \d)))))
+	(testing "no matches"
+		(is (= '(3 1 2 5 4) (remove-from-list 7 '(3 1 2 5 4))))
+		(is (= '(\a \b \d) (remove-from-list \c '(\a \b \d))))))
+
 (deftest next-largest-test
 	(testing "next largest number using the n-1 significant digits"
 		(is (= '(1 2 4 3) (next-largest '(1 2 3 4))))
@@ -48,3 +61,15 @@
 		(is (= '(\d \h \k \c) (next-largest '(\d \h \c \k))))
 		(is (= '(\h \c \d \k) (next-largest '(\d \k \h \c))))))
 
+(deftest sample-tests
+	(testing "test case with the sample input"
+		(is (= "jkscckttaeifiksgkxmx" (process "jkscckttaeifiksgkmxx")))
+		(is (= "acbc" (process "abcc")))
+		))
+
+;5
+;ab
+;bb
+;hefg
+;dhck
+;dkhc
