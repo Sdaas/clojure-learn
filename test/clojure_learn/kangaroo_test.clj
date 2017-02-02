@@ -15,7 +15,11 @@
             [clojure-learn.kangaroo :refer :all]))
 
 (deftest meet-test
-  (testing "do the kangaroos meet"
+  (testing "v1 not = v2"
     (is (= true (meet? 0 3 4 2)))
     (is (= false (meet? 0 2 5 3)))
+    (is (= false (meet? 21 6 47 3)))
+    (is (= true (meet? 10 3 10 3))))
+  (testing "v1 = v2"
+    (is (= false (meet? 10 3 30 3)))
     (is (= true (meet? 10 3 10 3)))))
