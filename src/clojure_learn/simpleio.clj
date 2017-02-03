@@ -1,7 +1,7 @@
 (ns clojure-learn.simpleio)
 
 (defn read-n
-  "read n elements from stdin into a vector"
+  "read n elements from stdin into a vector of strings"
   [n]
   (loop [
          x n
