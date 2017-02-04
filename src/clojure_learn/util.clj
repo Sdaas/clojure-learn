@@ -18,3 +18,16 @@
                 ]
             (into #{} (clojure.set/union #{} sr1 sr2)))
     ))
+
+(defn pairs
+  "set of pairs from a set"
+  [data]
+  (if (= 2 (count data))
+    #{data}  ; returning a set of sets ...
+    (let [
+          f1  (first data)  ; first element
+          r1  (into #{} (rest data))
+          s1  (into #{} (map #(hash-set f1 %) r1))
+          s2  (pairs r1)
+          ]
+      (clojure.set/union s1 s2))))
