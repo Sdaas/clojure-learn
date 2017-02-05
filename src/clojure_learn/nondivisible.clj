@@ -50,11 +50,6 @@
     ))
 
 
-(defn maximal-subset
-  "return the size of the maximal subset such that the sum of no two elements is divisible by 2k"
-  [data k]
-  0)
-
 (defn remainders
   "returns a hashmap where the key n contains a set of all numbers that have remainder n wrt k"
   [data k]
@@ -74,19 +69,47 @@
 
   (update-hashmap {} data))
 
+(defn double-zero
+  "Given a hashmap of remainders, the maximal subset for zero-remainders"
+  [h k]
+  (let [
+        nums (h 0)  ; all the numbers that have zero-remainder
+        odd-multiples   (count (filter #(odd? (quot % k)) nums))
+        even-multiples  (count (filter #(even? (quot % 5)) nums))
+        ]
+        (+  (if (> odd-multiples 0) 1 0) (if (> even-multiples 0) 1 0))))
+
+
+(defn max-set-size-for-pair
+  [rems pair]
+  (let [
+        f (first pair)
+        s (second pair)
+        c1 (count (or (rems f) #{}))
+        c2 (count (or (rems s) #{}))
+        ]
+    (if (= f s)
+      (if (= 0 c1) 0 1)
+      (max c1 c2))))
+
+(defn size-of-maximal-subset
+  "return the size of the maximal subset such that the sum of no two elements is divisible by 2k"
+  [data k]
+  (let [
+        pairs (create-pairs k)
+        rems  (remainders data k)
+        zzz   (double-zero rems k)
+        n     (reduce + (map #(max-set-size-for-pair rems %) pairs))
+        ]
+    (+ zzz n)))
+
+
 (defn -main
   "Main loop"
   [& args]
   (let [
         [n k] (map #(Integer/parseInt %) (split (read-line) #"\s+"))
         data  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
-        pairs (create-pairs k)
-
-       ; SOLVE FOR 0 0
-       ; SOLVE for K K
-       ; SOLVE for other pairs
-
         ]
-    (println n k)
-    (println data)))
+    (println (size-of-maximal-subset data k))))
 

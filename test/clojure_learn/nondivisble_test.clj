@@ -59,20 +59,27 @@
           data [5 10 15 20]        ; The valid sets are {5 10} or {5 20} or {10 15} or {15 20}
           k    5
           s1   (solve data k )
-          s2   (maximal-subset data k)
+          s2   (size-of-maximal-subset data k)
           ]
-      (is (= s1 s2)))
+      (is (= s1 s2))
+      (is (= s2 2)))
     )
   (testing "maximal subsets"
     (let [
           data [1 7 2 3]
           k    3
           s1   (solve data k )
-          s2   (maximal-subset data k)
+          s2   (size-of-maximal-subset data k)
           ]
       (is (= s1 s2)))
-  )
-  )
+    (let [
+          data [1 7 2 3]
+          k    4
+          s1   (solve data k )
+          s2   (size-of-maximal-subset data k)
+          ]
+      (is (= s1 s2)))
+    ))
 
 
 
