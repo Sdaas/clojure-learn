@@ -35,11 +35,12 @@
         not-divisible-sets (filter #(foo %) (filter #(> (count %) 1) s))  ; the sets where sum of no two elements are divisble by 2k
         set-size (map #(count %) not-divisible-sets)
         ]
-    (println "***")
-    (println s)
-    (println not-divisible-sets)
-    (println set-size)
     (apply max set-size)
+    ))
+
+(deftest remainders-tests
+  (testing "creater the remainders hashset"
+    (is (= { 0 #{5 10} 1 #{11} 3 #{8 13} 4 #{9} } (remainders [5 8 9 10 11 13] 5)))
     ))
 
 (deftest create-pairs-tests
@@ -53,6 +54,15 @@
     ))
 
 (deftest maximal-subset-tests
+  (testing "maximal subsets for 0 0 remainder pair"
+    (let [
+          data [5 10 15 20]        ; The valid sets are {5 10} or {5 20} or {10 15} or {15 20}
+          k    5
+          s1   (solve data k )
+          s2   (maximal-subset data k)
+          ]
+      (is (= s1 s2)))
+    )
   (testing "maximal subsets"
     (let [
           data [1 7 2 3]
@@ -61,7 +71,8 @@
           s2   (maximal-subset data k)
           ]
       (is (= s1 s2)))
-  ))
+  )
+  )
 
 
 
