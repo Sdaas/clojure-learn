@@ -79,7 +79,28 @@
           s2   (size-of-maximal-subset data k)
           ]
       (is (= s1 s2)))
+    (let [
+        data [1 2 3 4 5]
+          k    1
+          s1   (solve data k )
+          s2   (size-of-maximal-subset data k)
+          ]
+      (is (= s1 s2))
+      (is (= s2 1)))
     ))
+
+
+(deftest foo
+  (testing "maximal subsets"
+    (let [
+          data [1 2 3 4 5]    ; {1 2}
+          k    1
+          s1   (solve data k )
+          s2   (size-of-maximal-subset data k)
+          ]
+      (is (= s1 s2)))
+    ))
+
 
 
 

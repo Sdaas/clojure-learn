@@ -101,6 +101,8 @@
         zzz   (double-zero rems k)
         n     (reduce + (map #(max-set-size-for-pair rems %) pairs))
         ]
+    (println "pairs" pairs)
+    (println "rems"  rems)
     (+ zzz n)))
 
 
