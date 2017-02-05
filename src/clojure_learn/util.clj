@@ -31,3 +31,12 @@
           s2  (pairs r1)
           ]
       (clojure.set/union s1 s2))))
+
+(defn log2
+  "log to the base 2"
+  [x]
+  (/ (Math/log x) (Math/log 2)))
+
+(defn exp [x n]
+  "does x ^ n"
+  (reduce * (repeat n x)))
