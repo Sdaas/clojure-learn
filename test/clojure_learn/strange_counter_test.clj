@@ -52,6 +52,8 @@
     (is (= 7 (display-value 15)))
     (is (= 1 (display-value 21)))
     (is (= 24 (display-value 22)))
+    (is (= 649267441662 (display-value 1000000000000)))
     ))
+
 
 

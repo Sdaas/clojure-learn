@@ -60,7 +60,8 @@
   "Main loop"
   [& args]
   (let [
-        n (Integer/parseInt (read-line))
+        n (bigint (read-line))
+        answer (display-value n)
         ]
-    (println (display-value n))))
+    (println (format "%d" (biginteger answer)))))
 
