@@ -40,12 +40,25 @@
      (recur (conj acc (into [] (take 3 data))) (rest data))
      )))
 
+(defn beautiful-triplets-in-list
+  [d data]
+  (count (filter #((partial beautiful? d) %) (triplets data))))
+
+(defn count-beautiful-triplets
+  "number of beautiful triplets in the vector"
+  [data d]
+  (let [
+        h (create-hashmap data d)  ; All the data groupbed by remainder
+        v (vals h) ; Throw away the key. Since we are intereseted just in the groups of data
+        f (partial beautiful-triplets-in-list d)
+        ]
+    (reduce + (map #(f %) v))))
+
 (defn -main
   "Main loop"
   [& args]
   (let [
         [n d ] (map #(Integer/parseInt %) (split (read-line) #"\s+"))
         data  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
-        h     (create-hashmap data d)
         ]
-    (println h)))
+    (println (count-beautiful-triplets data d))))
