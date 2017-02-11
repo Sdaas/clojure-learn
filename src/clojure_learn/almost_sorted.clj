@@ -61,11 +61,13 @@
 
   (let [
         {start :start end :end} (or (descending data) {:start 0 :end 0})
-        ;c1     ; yk > xk
-        ;fixable? (and (> (data end) (data (dec start))) (< (data start) (data (inc end))))  ; yk > xk and y1 < z1
+        c1  (or (= (inc end) (count data)) (< (data start) (data (inc end)))) ; y1 < z1. if z1 does not exist, then true
+        c2  (or (= start 0) (> (data (dec start)) (data end))) ; yk > xk. If yk is the last element, then true
+        fixable? (and c1 c2) ; yk > xk and y1 < z1
         op (-operation (- end start))
         ]
-    {:op op :start start :end end}))
+    (println data c1 c2 fixable? op start end)
+    {:op op :start (inc start) :end (inc end) })) ; convert start/end from 0 offset to 1 offset
 
 (defn -main
   "Main loop"
