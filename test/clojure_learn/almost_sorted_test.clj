@@ -32,15 +32,10 @@
     ))
 
 (deftest fix-test
-  (testing "cannot be fixed - since it is already sorted"
-    (is (= {:op "no" :start 0 :end 0} (fix [])))     ; empty list
-    (is (= {:op "no" :start 0 :end 0} (fix [1 2]))) ; already sorted
-    (is (= {:op "no" :start 0 :end 0} (fix (range 10)))) ; already sorted
-    )
   (testing "cannot be fixed"
-    (is (= {:op "no" :start 0 :end 0} (fix [ 30 10 20 ])))     ; descending sequence in start
-    (is (= {:op "no" :start 0 :end 0} (fix [ 1 5 30 10 20 ]))) ; descending sequence in middle
-    (is (= {:op "no" :start 0 :end 0} (fix [ 1 5 20 30 10 ]))) ; descending sequence in end
+    (is (= {:op "no" } (fix [ 30 10 20 ])))     ; descending sequence in start
+    (is (= {:op "no" } (fix [ 1 5 30 10 20 ]))) ; descending sequence in middle
+    (is (= {:op "no" } (fix [ 1 5 20 30 10 ]))) ; descending sequence in end
     )
   (testing "can be fixed by swapping"
     (is (= {:op "swap" :start 1 :end 2} (fix [20 10 30 40 50 ]))) ; swap the first two
@@ -51,4 +46,10 @@
     (is (= {:op "reverse" :start 1 :end 3} (fix [30 20 10 40 50 60]))) ; reverse a sequence at start
     (is (= {:op "reverse" :start 4 :end 6} (fix [10 20 30 60 50 40]))) ; reverse a sequence at end
     (is (= {:op "reverse" :start 3 :end 5} (fix [10 20 50 40 30 60]))) ; reverse a sequence in middle
-    ))
+    )
+  (testing "misc "
+    (is (= {:op "swap" :start 1 :end 2} (fix [4 2])))
+    (is (= {:op "no" } (fix [3 1 2])))
+    (is (= {:op "reverse" :start 2 :end 5} (fix [1 5 4 3 2 6]))) ;
+    )
+  )

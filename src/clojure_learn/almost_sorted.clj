@@ -59,15 +59,17 @@
       (= 1 len) "swap"
       :else "reverse"))
 
+  ; x1 .. xk y1 .... yk z1..zk
   (let [
-        {start :start end :end} (or (descending data) {:start 0 :end 0})
-        c1  (or (= (inc end) (count data)) (< (data start) (data (inc end)))) ; y1 < z1. if z1 does not exist, then true
-        c2  (or (= start 0) (> (data (dec start)) (data end))) ; yk > xk. If yk is the last element, then true
-        fixable? (and c1 c2) ; yk > xk and y1 < z1
+        {start :start end :end} (descending data)     ; ASSUMES that retval is not nil. i.e., list is not already sorted
+        sequence-at-start? (= start 0)                ; if the descending sequence is at the start (xk does not exist)
+        sequence-at-end?   (= (inc end) (count data)) ; if the descending sequence is at the end (z1 does not exist)
+        c1  (or sequence-at-end? (< (data start) (data (inc end)))) ; y1 < z1, or z1 does not exist
+        c2  (or sequence-at-start? (> (data end) (data (dec start)))) ; yk > xk. or xk does not exist
         op (-operation (- end start))
+        fixable? (and c1 c2) ; yk > xk and y1 < z1
         ]
-    (println data c1 c2 fixable? op start end)
-    {:op op :start (inc start) :end (inc end) })) ; convert start/end from 0 offset to 1 offset
+    (if fixable? {:op op :start (inc start) :end (inc end) } {:op "no" }))) ; convert start/end from 0 offset to 1 offset
 
 (defn -main
   "Main loop"
@@ -75,5 +77,11 @@
   (let [
         n (Integer/parseInt (read-line))
         data  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
+        {op :op start :start end :end} (fix data)
         ]
-    (println "hello")))
+      (if (= op "no")
+        (println "no")
+        (do
+          (println "yes")
+          (println op start end)
+          ))))
