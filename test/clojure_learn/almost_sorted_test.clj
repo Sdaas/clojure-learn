@@ -42,6 +42,11 @@
     (is (= {:op "swap" :start 4 :end 5} (fix [10 20 30 50 40 ]))) ; swap the last two
     (is (= {:op "swap" :start 3 :end 4} (fix [10 20 40 30 50 ]))) ; swap the ones in middle
     )
+  (testing "can be fixed by swapping two non adjacent numbers"
+    (is (= {:op "swap" :start 1 :end 5} (fix [50 20 30 40 10])))  ; swap the first and last
+    (is (= {:op "swap" :start 2 :end 5} (fix [10 50 30 40 20])))  ; swap the second and last
+    (is (= {:op "swap" :start 2 :end 4} (fix [10 40 30 20 50 ]))) ; swap the ones in middle
+    )
   (testing "can be fixed by reversing"
     (is (= {:op "reverse" :start 1 :end 3} (fix [30 20 10 40 50 60]))) ; reverse a sequence at start
     (is (= {:op "reverse" :start 4 :end 6} (fix [10 20 30 60 50 40]))) ; reverse a sequence at end

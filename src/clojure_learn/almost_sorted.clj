@@ -77,7 +77,7 @@
   (let [
         n (Integer/parseInt (read-line))
         data  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
-        {op :op start :start end :end} (fix data)
+        { op :op start :start end :end} (fix (into [] data))
         ]
       (if (= op "no")
         (println "no")
