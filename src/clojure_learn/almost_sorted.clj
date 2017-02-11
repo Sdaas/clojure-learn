@@ -10,14 +10,14 @@
 
 ; if second > first => subsequence(list)
 
-(defn foo
-  "find the index of the descending subsequence"
-  ([data] (foo data 0))
+(defn descending
+  "find the index (offset 1 based) of the descending subsequence. Returns nil if no descending sequence is gound"
+  ([data] (descending data 0))
   ([data index]
 
-   (defn subseq
+   (defn -subseq
      [data pred msg index]
-     (println msg data index)
+     ;(println msg data index)
      (if (< (count data) 2)
        {:index index :data data}
        (let [
@@ -27,15 +27,16 @@
            (recur (rest data) pred msg (inc index))
            {:index index :data data}))))
 
-   (let [
-         {idx1 :index data1 :data} (subseq data > "AAA" index) ; idx1 is where ascending sequence stops
-         {idx2 :index data2 :data} (subseq data1 < "DDD" index) ; index IN DATA1 where the descending seq stops
-         idx3 (+ idx1 idx2) ; remember that idx1 and idx2 are zero offset based
-         ]
-     (println " idx1=" idx1)
-     (println "data1=" data1)
-     (println " idx3=" idx3)
-     )))
+   (if (empty? data)
+     nil
+     (let [
+           {idx1 :index data1 :data} (-subseq data > "AAA" index) ; idx1 is where ascending sequence stops
+           {idx2 :index data2 :data} (-subseq data1 < "DDD" index) ; index IN DATA1 where the descending seq stops
+           idx3 (+ idx1 idx2) ; remember that idx1 and idx2 are zero offset based
+           ]
+       (if (= (inc idx1) (count data))
+         nil  ; This is a purely ascending sequence. So no match
+         {:start (inc idx1) :end (inc idx3)})))))
 
 
 
