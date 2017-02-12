@@ -18,8 +18,27 @@
 ; and yk > xk
 ; and y1 < z1
 ;
-; [10 20 40 30 50 ] => descending sequence is [40 30]. 40 < 50 and 30 > 20
-; [30 10 20]        => descending sequence is [30 10]. 30 < 20 FALSE. so it is not possible to conver the sequence
+
+
+; Lists with two elements are special cases. if a > b then swap
+
+
+; [10 20 30 40 50 60 70 80] => no blips  item [n-1] < item[n] < item[n-1]  n=1 ( ignore item at index 0 )
+; everytime we encounter a blip, we start from the next element in list
+;
+; [10 70 30 40 50 60 20 80] => blip at 70
+;                              [30 40 50 60 20 80] => blip at 20
+;                                                  => [80]
+;
+
+; Lists with three elements
+; [10 20 30] => no blips => already sorted
+; [10 30 20] => blip at 20 => swap 20 with the previous one
+; [20 10 30] => blip at 10 => swap 20 with previous one
+; [20 30 10] => blip at 10 =>
+; [20 10 30] => blip at 10
+; [20 30 10] => blip at 10
+
 
 (defn descending
   "find the index (offset 0 based) of the descending subsequence. Returns nil if no descending sequence is gound"

@@ -14,6 +14,11 @@
 ;   lein test :only clojure-learn.almost-sorted-test/foo
 ;
 
+
+(deftest indices-test
+  (testing "identify the out of order indices"
+
+    ))
 (deftest descending-test
   (testing "identify the descending sub sequence"
     (is (nil? (descending [])))                 ; no descending numbers
