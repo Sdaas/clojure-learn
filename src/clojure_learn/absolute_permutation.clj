@@ -64,20 +64,19 @@
        ))))
 
 
-(defn parse-item
-  "Converts a string into an list of integers"
-  [item]
-  (map #(Integer/parseInt %) (split item #"\s+")))
-
 (defn process
-  "return the first absolute-permutation for this n-k pair, nil if there is none"
-   [nk-pair]
+  "Processes each line of input and outputs the result"
+  [string]
+  ;(println "processing : " string)
   (let [
-        [n k] nk-pair
+        [n k] (map #(Integer/parseInt %) (split string #"\s+"))
         data  (rest (range (inc n)))
+        perm  (first (absolute-permutations data k 0)) ; the first absolute permutation. or nil if there is none
         ]
-    (println "process " data k)
-    (first (absolute-permutations data k 0))))
+    (if (nil? perm)
+      (print "-1")
+      (doseq [item perm] (print item "")))
+    (println)))
 
 (defn -main
   "Main loop"
@@ -85,8 +84,5 @@
   (let [
         t      (Integer/parseInt (read-line))   ; number of test cases
         strvec (read-n t) ; read all the lines into a vector of strings
-        data   (map #(parse-item %) strvec)
-        out    (map #(process %) data)
         ]
-    (println out)))
-
+    (doseq [item strvec] (process item))))
