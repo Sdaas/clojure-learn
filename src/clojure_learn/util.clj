@@ -40,3 +40,33 @@
 (defn exp [x n]
   "does x ^ n"
   (reduce * (repeat n x)))
+
+; Partition a list around a index. For example (partition 1 [10 20 30 40 50]) will partition
+; around index position 1 and return the pivot point 20, and two lists (10) and (30 40 50)
+(defn partition3
+  "Partition the list into three sections"
+  [index data]
+  (let [
+        [part1 temp] (split-at index data)
+        part2        (rest temp)
+        pivot        (first temp)
+        ]
+    {:part1 part1 :pivot pivot :part2 part2}))
+
+; Given a list, generate all its permutations
+(defn permutations
+  ([data]
+   (if (= 1 (count data))
+     (list data) ; list of permutations ..
+     (reduce #(concat %1 (permutations %2 data)) '() (range (count data))))
+    )
+  ([index data]
+
+
+   (let [
+         {p1 :part1 pivot :pivot p2 :part2} (partition3 index data)
+         new-data  (concat p1 p2)  ; data without the pivot
+         perms     (permutations new-data) ; all the permutations for new-data
+         ]
+     (map #(cons pivot %) perms))
+    ))

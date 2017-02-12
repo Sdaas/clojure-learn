@@ -3,66 +3,42 @@
   (use [clojure.string :only (split triml)])
   (:gen-class))
 
-
 ; Absolute Permutation
 ;
 ; https://www.hackerrank.com/challenges/absolute-permutation
 ;
 
-; Given a list of items in lexicographic order, generate all the permutations also in lexicographic order
-; (p 1 2 3 4) = 1 (p 2 3 4), 2 (p 1 3 4), 3 (p 1 2 4), 4 (p 1 2 3)
+; Suppose N = 6 and K = 2
+; numbers are {1 2 ... 6}
+; i=1 => abs(x-1) = 2 => { 3 }
+; i=2 => abs(x-2) = 2 => { 4 }
+; i=3 => abs(x-3) = 2 => { 1, 5 }
+; i=4 => abs(x-4) = 2 => { 2, 6 }
+; i=5 => ans(x-5) = 2 => { 3 }
+; A particular position can be taken by a maximum of two numbers
+; x = k + i
+; x = i - k
+
+(defn solve
+  [data i k]
+  (if (empty? data)
+    (list #{})
+    (let [
+          x1  (+ k i)
+          x2  (- i k)
+          p1  (if (contains? data x1) (solve (clojure.set/difference data #{x1}) (inc i) k) '()) ; a list or nil
+          p2  (if (contains? data x2) (solve (clojure.set/difference data #{x2}) (inc i) k) '()) ; a list or nil
+          l1  (map #(cons x1 %) p1)
+          l2  (map #(cons x2 %) p2)
+          ]
+      (concat l1 l2))))
 
 
-; Partition a list around a index. For example (partition 1 [10 20 30 40 50]) will partition
-; around index position 1 and return the pivot point 20, and two lists (10) and (30 40 50)
-(defn partition3
-  "Partition the list into three sections"
-  [index data]
-  (let [
-        [part1 temp] (split-at index data)
-        part2        (rest temp)
-        pivot        (first temp)
-        ]
-    {:part1 part1 :pivot pivot :part2 part2}))
-
-(defn valid-pivot?
-  "returns true if the data for the (zero index) pos is equal to k"
-  [data pos k]
-  (= (Math/abs (- data (inc pos))) k))
-
-; Given a list, generate all its permutations
-(defn permutations
-  ([data]
-   (if (= 1 (count data))
-     (list data) ; list of permutations ..
-     (reduce #(concat %1 (permutations %2 data)) '() (range (count data))))
-    )
-  ([index data]
-   (let [
-         {p1 :part1 pivot :pivot p2 :part2} (partition3 index data)
-         new-data  (concat p1 p2)  ; data without the pivot
-         perms     (permutations new-data) ; all the permutations for new-data
-         ]
-     (map #(cons pivot %) perms))
-    ))
-
-; Given a list, generate all the valid absolute permutations
-(defn absolute-permutations
-  ([data k depth]
-   (if (= 1 (count data))
-     (list data) ; list of permutations ..
-     (reduce #(concat %1 (absolute-permutations %2 data k depth)) '() (range (count data)))
-     )
-    )
-  ([index data k depth]
-   (let [
-         {p1 :part1 pivot :pivot p2 :part2} (partition3 index data)
-         ]
-     (if (valid-pivot? pivot depth k)
-       (map #(cons pivot %) (absolute-permutations (concat p1 p2) k (inc depth)))
-       (list ) ; there are no valid permutations
-       ))))
-
+(defn first-absolute-permutation
+  "return the first absolute permutation"
+  [data k]
+  ; some hard-coded dummy value for now
+  (list 1 2 3))
 
 (defn process
   "Processes each line of input and outputs the result"
@@ -71,7 +47,7 @@
   (let [
         [n k] (map #(Integer/parseInt %) (split string #"\s+"))
         data  (rest (range (inc n)))
-        perm  (first (absolute-permutations data k 0)) ; the first absolute permutation. or nil if there is none
+        perm  (first-absolute-permutation data k)
         ]
     (if (nil? perm)
       (print "-1")
