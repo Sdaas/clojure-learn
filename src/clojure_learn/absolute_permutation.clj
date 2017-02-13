@@ -34,16 +34,12 @@
   (if (empty? data)
     (list #{})
     (let [
-          x1  (+ k i)   ; BUG BUG -> if k = 0, then x1 = x2, then then we are uncessarily making an extra call
-          x2  (- i k)
+          x1 (+ k i)
+          x2 (- i k)
           l1  (map #(cons x1 %) (-inner data x1 i k))
-          l2  (map #(cons x2 %) (-inner data x2 i k))
+          l2  (if (= x1 x2) '() (map #(cons x2 %) (-inner data x2 i k)))
           ]
-      (println "***")
-      (println "l1=" l1)
-      (println "l1=" l2)
       (concat l1 l2))))
-
 
 (defn first-permutation
   [n k]

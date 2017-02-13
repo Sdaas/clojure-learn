@@ -20,7 +20,6 @@
     (is (= {:valid true :perm '(1 2 3)} (first-permutation 3 0)))
     (is (= {:valid false } (first-permutation 3 1)))
     (is (= {:valid false } (first-permutation 3 2)))
-    (is (= {:valid false } (first-permutation 3 0)))
     ))
 
 (deftest foo-test
@@ -43,4 +42,5 @@
 
 
 ; 92 14
-; 92 0
+; 98 7
+; 90 15
