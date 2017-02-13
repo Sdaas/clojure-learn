@@ -1,5 +1,6 @@
 (ns clojure-learn.absolute-permutation
   (use [clojure-learn.simpleio :only (read-n write-n)])
+  (use [clojure.set :only (difference)])
   (use [clojure.string :only (split triml)])
   (:gen-class))
 
@@ -19,26 +20,41 @@
 ; x = k + i
 ; x = i - k
 
+
 (defn solve
   [data i k]
+
+  (defn -inner
+    [data x i k]
+    ;(println "inner **" data x i k )
+    (if (contains? data x)
+      (solve (difference data #{x}) (inc i) k)
+      '()))
+
   (if (empty? data)
     (list #{})
     (let [
-          x1  (+ k i)
+          x1  (+ k i)   ; BUG BUG -> if k = 0, then x1 = x2, then then we are uncessarily making an extra call
           x2  (- i k)
-          p1  (if (contains? data x1) (solve (clojure.set/difference data #{x1}) (inc i) k) '()) ; a list or nil
-          p2  (if (contains? data x2) (solve (clojure.set/difference data #{x2}) (inc i) k) '()) ; a list or nil
-          l1  (map #(cons x1 %) p1)
-          l2  (map #(cons x2 %) p2)
+          l1  (map #(cons x1 %) (-inner data x1 i k))
+          l2  (map #(cons x2 %) (-inner data x2 i k))
           ]
+      (println "***")
+      (println "l1=" l1)
+      (println "l1=" l2)
       (concat l1 l2))))
 
 
-(defn first-absolute-permutation
-  "return the first absolute permutation"
-  [data k]
-  ; some hard-coded dummy value for now
-  (list 1 2 3))
+(defn first-permutation
+  [n k]
+  (let [
+        data (into #{} (rest (range (inc n))))
+        out  (solve data 1 k)
+        valid? (not (empty? out))
+        ]
+    (if valid?
+      {:valid true :perm (first out)}
+      {:valid false})))
 
 (defn process
   "Processes each line of input and outputs the result"
@@ -46,12 +62,11 @@
   ;(println "processing : " string)
   (let [
         [n k] (map #(Integer/parseInt %) (split string #"\s+"))
-        data  (rest (range (inc n)))
-        perm  (first-absolute-permutation data k)
+        {valid? :valid perm :perm} (first-permutation n k)
         ]
-    (if (nil? perm)
-      (print "-1")
-      (doseq [item perm] (print item "")))
+    (if valid?
+      (doseq [item perm] (print item ""))
+      (print "-1"))
     (println)))
 
 (defn -main
