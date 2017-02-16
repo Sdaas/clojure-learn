@@ -58,76 +58,39 @@
 ; For K=3 (4 5 6 1 2 3) (10 11 12 7 8 9)
 ; For K=4 No Solution .....
 ; For K=5 No Solution .....
-; For K=6 (7 8 9 10 11 12) (1 2 3 4 5 6)
+; For K=6 (7 8 9 10 11 12 1 2 3 4 5 6)
 ;
 ; (d) Solution exists if N / K is an even number
 
 (defn solution?
   [n k]
   (or (= k 0) (= 0 (rem n (* 2 k)))))
-;
-; A particular position can be taken by a maximum of two numbers
-; x1 = k + i
-; x2 = i - k
-;
-; So at any step, we will be "optimistic" and lead with the smaller of x1, x2. If we cannot
-; get a solution with x1, then we will back track and try with x2.
 
+; Assuming that a solution exists for a certain n, k ..
+; split data into chunks of 2k
+; split the chunk into two parts p1 and p2 of k each
+; swap the two parts
 
-; [...] data i k
-; x1
-; x2
-; x = smaller of x1, x2 that is in the data set
-;
-; o try  [.... x] (data minus x ) (i+1) k
-; if o !=nil
-;    o this is what we are looking for
-;    try [ ... x )data minus x ) i+1 k
-
-(defn candidates
-  "returns a vector of possible candidates at this position, in priority order"
-  [data i k]
+(defn process-chunk
+  [i k]
   (let [
-        x1 (+ i k )
-        x2 (- i k )]
-    (cond
-      (or (= x1 x2) (< x2 0)) [x1]  ; this is the only option possible at this position
-      (< x1 x2) [x1 x2]     ; we shall lead with the smaller number
-      :else     [x2 x1] ))) ; since x2 is smaller, we shall lead with that
+        ik2 (* 2 (* i k))
+        p1  (map #(+ (inc ik2) %) (range k))
+        p2  (map #(+ k %) p1)
+        ]
+    (concat p2 p1)))
 
-
-; Returns the smallest absolute permutation. Or nil, if no absolute permutation exists
 (defn smallest
-  ([n k]
-   (cond
-     (= k 0 ) (into [] (rest (range (inc n))))
-     (not (solution? n k)) nil
-     :else (smallest []  (into #{} (rest (range (inc n)))) 1 k)))
-
-  ([acc data i k]  ; acc must be a vector, data is a set
-
-    (defn -helper
-      [acc2 data2 cc ii kk]
-      (smallest (conj acc2 cc) (clojure.set/difference data2 #{cc}) (inc ii) kk))
-
-    (if (empty? data)
-      acc ; we have a solution !
-      (let [
-            [c1 c2] (filter #(contains? data %) (candidates data i k))  ; generate the candidates.
-            ]
-        ;(println c1 c2)
-        (cond
-          (nil? c1) nil ; we can never have a non-nil c2 in this case
-          (nil? c2) (-helper acc data c1 i k )
-          :else  ; try c1 first, if that fails, then try c2
-          (let [
-                o1 (-helper acc data c1 i k )
+  "returns the smallest absolute permutation. returns nil if no solution exists"
+  [n k]
+  (cond
+    (= k 0 ) (into [] (rest (range (inc n))))
+    (not (solution? n k)) nil
+    :else (let [
+                chunks (range (/ n (* 2 k)))
+                tmp    (map #(process-chunk %1 k) chunks)
                 ]
-            ;(println "o1=" o1)
-            (if (not (nil? o1))   ; if o1 worked, then return it, else return the result of c2
-              o1
-              (-helper acc data c2 i k ))))))))
-
+            (reduce concat '() tmp))))
 
 (defn process
   "Processes each line of input and outputs the result"
