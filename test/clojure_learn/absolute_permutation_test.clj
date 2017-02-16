@@ -14,6 +14,19 @@
 ;   lein test :only clojure-learn.absolute-permutation-test/foo
 ;
 
+(deftest solution-test
+  (testing "determine if a solution exists"
+    (is (solution? 10 0))  ; k = 0
+    (is (solution? 12  1))
+    (is (solution? 12 2))
+    (is (solution? 12 3))
+    (is (not (solution? 12  5)))
+    (is (not (solution? 12  5)))
+    (is (solution? 12 6))
+    (is (not (solution? 12  7)))
+    (is (not (solution? 12  8)))
+    ))
+
 (deftest smallest-test
   (testing "smallest permultation test"
     (is (= [2 1] (smallest [] #{1 2} 1 1)))
@@ -21,4 +34,9 @@
     (is (nil? (smallest [] #{1 2 3} 1 1)))
     (is (nil? (smallest [] #{1 2 3} 1 2)))))
 
+(deftest zero-k-test
+  (testing "case when k = 0 "
+    (is (= [1 2 3 4 5] (smallest 5 0)))
+    )
+  )
 

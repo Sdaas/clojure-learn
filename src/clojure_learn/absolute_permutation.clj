@@ -9,13 +9,62 @@
 ; https://www.hackerrank.com/challenges/absolute-permutation
 ;
 
-; Suppose N = 6 and K = 2
-; numbers are {1 2 ... 6}
-; i=1 => abs(x-1) = 2 => { 3 }
-; i=2 => abs(x-2) = 2 => { 4 }
-; i=3 => abs(x-3) = 2 => { 1, 5 }
-; i=4 => abs(x-4) = 2 => { 2, 6 }
-; i=5 => ans(x-5) = 2 => { 3 }
+; For k = 0, need to do abs (data[i] - i ) = 0 => data[i] = i
+;
+; For other values of k, any particular position can be taken by a maximum of two numbers
+; x1 = k + i
+; x2 = i - k;
+;
+; Lets see how these play out various values of k when N = 6
+;
+; K = 1         K = 2         K = 3       K = 4
+;
+; Pos x1 x2     Pos x1 x2     Pos x1 x2   Pos x1 x2
+; 1   2  -      1   3  -      1   4  -    1   5  -
+; 2   3  1      2   4  -      2   5  -    2   6  -
+; 3   4  2      3   5  1      3   6  -    3   -  -
+; 4   5  3      4   6  2      4   -  1    4   -  -
+; 5   6  4      5   -  3      5   -  2    5   -  1
+; 6   -  5      6   -  4      6   -  3    6   -  2
+;
+; So the values that x1 and x2 can take can be seen as two "windows" that slide past each other. From the example
+; above it can be seen that
+; (a) For K > N/2 there are slots that cannot be covered by any number. So there is no solution for K > N/2
+; (b) For K = N/2, it can be seen that there is _exactly_ one solution for each number. So a solution exists
+; (c) For K < N/2, it can be been that there is _exactly_ one solution for the first k and last k numbers. But the
+;     pattern is not clear
+;
+; Lets see how these play out various values of k when N = 12
+;
+; K = 1         K = 2         K = 3       K = 4       K=5         K=6
+;
+; Pos x1 x2     Pos x1 x2     Pos x1 x2   Pos x1 x2   Pos x1 x2   Pos x1  x2
+; 1   2  -      1   3  -      1   4  -    1   5  -    1   6  -    1    7  -
+; 2   3  1      2   4  -      2   5  -    2   6  -    2   7  -    2    8  -
+; 3   4  2      3   5  1      3   6  -    3   7  -    3   8  -    3    9  -
+; 4   5  3      4   6  2      4   7  1    4   8  -    4   9  -    4   10  -
+; 5   6  4      5   7  3      5   8  2    5   9  1    5  10  -    5   11  -
+; 6   7  5      6   8  4      6   9  3    6  10  2    6  11  1    6   12  -
+; 7   8  6      7   9  5      7  10  4    7  11  3    7  12  2    7    -  1
+; 8   9  7      8  10  6      8  11  5    8  12  4    8   -  3    8    -  2
+; 9  10  8      9  11  7      9  12  6    9   -  5    9   -  4    9    -  3
+;10  11  9     10  12  8     10   -  7   10   -  6   10   -  5   10    -  4
+;11  12 10     11   -  9     11   -  8   11   -  7   11   -  6   11    -  5
+;12   - 11     12   - 10     12   -  9   12   -  8   12   -  7   12    -  6
+;
+;
+; For K=1 (2 1) (4 3) (6 5) (8 7) (10 9) (12 11)
+; For K=2 (3 4 1 2) (7 8 5 6) (11 12 9 10)
+; For K=3 (4 5 6 1 2 3) (10 11 12 7 8 9)
+; For K=4 No Solution .....
+; For K=5 No Solution .....
+; For K=6 (7 8 9 10 11 12) (1 2 3 4 5 6)
+;
+; (d) Solution exists if N / K is an even number
+
+(defn solution?
+  [n k]
+  (or (= k 0) (= 0 (rem n (* 2 k)))))
 ;
 ; A particular position can be taken by a maximum of two numbers
 ; x1 = k + i
@@ -47,31 +96,37 @@
       :else     [x2 x1] ))) ; since x2 is smaller, we shall lead with that
 
 
+; Returns the smallest absolute permutation. Or nil, if no absolute permutation exists
 (defn smallest
-  "returns the smallest absolute permutation, or nil"
-  [acc data i k]  ; acc must be a vector, data is a set
+  ([n k]
+   (cond
+     (= k 0 ) (into [] (rest (range (inc n))))
+     (not (solution? n k)) nil
+     :else (smallest []  (into #{} (rest (range (inc n)))) 1 k)))
 
-  (defn -helper
-    [acc2 data2 cc ii kk]
-    (smallest (conj acc2 cc) (clojure.set/difference data2 #{cc}) (inc ii) kk))
+  ([acc data i k]  ; acc must be a vector, data is a set
 
-  ;(println "*** " acc data i k)
-  (if (empty? data)
-    acc ; we have a solution !
-    (let [
-          [c1 c2] (filter #(contains? data %) (candidates data i k))  ; generate the candidates.
-          ]
-      (cond
-        (nil? c1) nil ; we can never have a non-nil c2 in this case
-        (nil? c2) (-helper acc data c1 i k )
-        :else  ; try c1 first, if that fails, then try c2
-        (let [
-              o1 (-helper acc data c1 i k )
-              ]
-          (if (nil? o1)
-            nil
-            (-helper acc data c2 i k )))))))
+    (defn -helper
+      [acc2 data2 cc ii kk]
+      (smallest (conj acc2 cc) (clojure.set/difference data2 #{cc}) (inc ii) kk))
 
+    (if (empty? data)
+      acc ; we have a solution !
+      (let [
+            [c1 c2] (filter #(contains? data %) (candidates data i k))  ; generate the candidates.
+            ]
+        ;(println c1 c2)
+        (cond
+          (nil? c1) nil ; we can never have a non-nil c2 in this case
+          (nil? c2) (-helper acc data c1 i k )
+          :else  ; try c1 first, if that fails, then try c2
+          (let [
+                o1 (-helper acc data c1 i k )
+                ]
+            ;(println "o1=" o1)
+            (if (not (nil? o1))   ; if o1 worked, then return it, else return the result of c2
+              o1
+              (-helper acc data c2 i k ))))))))
 
 
 (defn process
@@ -80,8 +135,7 @@
   ;(println "processing : " string)
   (let [
         [n k] (map #(Integer/parseInt %) (split string #"\s+"))
-        data  (into #{} (rest (range (inc n))))
-        out (smallest [] data 1 k)
+        out (smallest n k)
         ]
     (if (nil? out)
       (print "-1")
