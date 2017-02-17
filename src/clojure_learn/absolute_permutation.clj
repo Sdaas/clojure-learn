@@ -80,6 +80,14 @@
         ]
     (concat p2 p1)))
 
+; The simplest way to do this would have been
+;
+; tmp    (map #(process-chunk %1 k) chunks)
+; (reduce concat '() tmp))))
+;
+; Turns out that "concat" does not work for large collections. See
+; https://stuartsierra.com/2015/04/26/clojure-donts-concat to understand details
+;
 (defn smallest
   "returns the smallest absolute permutation. returns nil if no solution exists"
   [n k]
@@ -90,7 +98,7 @@
                 chunks (range (/ n (* 2 k)))
                 tmp    (map #(process-chunk %1 k) chunks)
                 ]
-            (reduce concat '() tmp))))
+            (reduce into [] tmp))))
 
 (defn process
   "Processes each line of input and outputs the result"

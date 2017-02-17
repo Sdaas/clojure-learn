@@ -47,6 +47,7 @@
     (is (nil? (smallest 12 4)))
     (is (nil? (smallest 12 5)))
     (is (= [7 8 9 10 11 12 1 2 3 4 5 6] (smallest 12 6)))
+    ;(is (nil? (smallest 86542 1)))   ;; stack overflowing in this case
     ))
 
 (deftest chunk-test
