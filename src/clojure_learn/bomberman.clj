@@ -90,7 +90,6 @@
 (defn boom
   "blow up the bombs"
   [data rows cols]
-  (println "boom" data rows cols)
   ; See https://clojuredocs.org/clojure.core/map-indexed %1 = index, %2 = item
 
   (defn foo
@@ -99,32 +98,23 @@
 
   (into [] (map-indexed foo data)))
 
-
-; 0  initial boom
-; 1  tick boom
-; 2  tick pace boom
-; 3  tick boom
-; 4  step 3 : tick place boom
-; 5  step 4 ; tick boom
-; 6  step 3 ; tick place boom
-; 7  step 4 ; tick boom
-
-
-
 (defn simulate
   "given an initial state, do a simultation for n seconds"
   [initial-state rows cols n]
-
+  (println "simulate" initial-state rows cols n)
   (loop [t 0
          state initial-state]
+    (println t state)
     (if (= t n)
       state
       (let [
-            tmp1 (tick state)
-            tmp2 (if (even? n) (place-bombs tmp1) tmp1)
-            next-data (boom tmp2 rows cols)
+            tmp1 (boom state rows cols)
+            tmp2 (tick tmp1)
+            next-data (if (odd? t) (place-bombs tmp2) tmp2)
             ]
-        (println t next-data)
+        (println "*" tmp1)
+        (println "*" tmp2)
+        (println "*" next-data)
         (recur (inc t) next-data))))
   )
 

@@ -214,9 +214,31 @@
   (testing "do a simultation over time"
     (let [
           data [0 3 0 0, 0 0 3 0, 0 0 3 0, 3 0 0 0]
-          exp1 [0 2 0 0, 0 0 2 0, 0 0 2 0, 2 0 0 0]
+          exp1 [0 2 0 0, 0 0 2 0, 0 0 2 0, 2 0 0 0] ; expected state after 1 second
+          exp2 [3 1 3 3, 3 3 1 3, 3 3 1 3, 1 3 3 3] ; expected state after 2 second
+          exp3 [0 0 0 2, 2 0 0 0, 0 0 0 0, 0 0 0 2] ; after 3 seconds
+          exp4 [3 3 3 1, 1 3 3 3, 3 3 3 3, 3 3 3 1] ; after 4 seconds
+          exp5 [0 2 0 0, 0 0 2 0, 0 2 2 0, 2 2 0 0] ; after 5 seconds
+          exp6 [3 1 3 3, 3 3 1 3, 3 1 1 3, 1 1 3 3]
+          exp7 [0 0 0 2, 2 0 0 0, 0 0 0 0, 0 0 0 2]
+          exp8 exp4 ; should bethe same as exp4
+          exp9 exp5 ; should be the same as exp5
           R 4
           C 4]
-      ;(is (= data (simulate data R C 0)))
+      (is (= data (simulate data R C 0)))
       (is (= exp1 (simulate data R C 1)))
+      (is (= exp2 (simulate data R C 2)))
+      (is (= exp3 (simulate data R C 3)))
+      (is (= exp4 (simulate data R C 4)))
+      (is (= exp5 (simulate data R C 5)))
+      (is (= exp6 (simulate data R C 6)))
+      (is (= exp7 (simulate data R C 7)))
+      (is (= exp8 (simulate data R C 8)))
+      (is (= exp9 (simulate data R C 9)))
       )))
+
+;
+; 0 3 0 0     0 2 0 0     3 1 3 3     0 0 0 2     3 3 3 1     0 2 0 0     3 1 3 3     0 0 0 2
+; 0 0 3 0     0 0 2 0     3 3 1 3     2 0 0 0     1 3 3 3     0 0 2 0     3 3 1 3     2 0 0 0
+; 0 0 3 0     0 0 2 0     3 3 1 3     0 0 0 0     3 3 3 3     0 2 2 0     3 1 1 3     0 0 0 0
+; 3 0 0 0     2 0 0 0     1 3 3 3     0 0 0 2     3 3 3 1     2 2 0 0     1 1 3 3     0 0 0 2
