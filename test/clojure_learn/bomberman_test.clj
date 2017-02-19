@@ -139,3 +139,53 @@
       (is (not (bottom-cell-bomb? data 6 R C)))
       (is (bottom-cell-bomb? data 7 R C))))
   )
+
+; 3 1 2 2 3
+; 2 2 2 3 1
+; 1 2 1 2 2
+; 2 1 2 2 2
+(deftest next-state-test
+  (testing "compute the next state of a cell"
+  (let [
+        data [3 1 2 2 3, 2 2 2 3 1, 1 2 1 2 2, 2 1 2 2 2 ]
+        R 4
+        C 5]
+    (is (= 0 (next-state 0 data R C)))  ; bomb goes off in next cell
+    (is (= 0 (next-state 1 data R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state 2 data R C)))  ; bomb goes off in previous cell
+    (is (= 2 (next-state 3 data R C)))  ; no-op
+    (is (= 0 (next-state 4 data R C)))  ; bomb goes off in the cell below
+
+    (is (= 0 (next-state 5 data R C)))  ; bomb goes off in the cell below
+    (is (= 0 (next-state 6 data R C)))  ; bomb goes off in the cell above
+    (is (= 0 (next-state 7 data R C)))  ; bomb goes off in the cell below
+    (is (= 0 (next-state 8 data R C)))  ; bomb goes off in next cell
+    (is (= 0 (next-state 8 data R C)))  ; bomb goes off in this cell
+
+    (is (= 0 (next-state 10 data R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state 11 data R C)))  ; bomb goes off in three cells around
+    (is (= 0 (next-state 12 data R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state 13 data R C)))  ; bomb goes off in previous cell
+    (is (= 0 (next-state 14 data R C)))  ; bomb goes off in cell above
+
+    (is (= 0 (next-state 15 data R C)))  ; bomb goes off in cell above
+    (is (= 0 (next-state 16 data R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state 17 data R C)))  ; bomb goes off in previous cell
+    (is (= 2 (next-state 18 data R C)))  ; no op
+    (is (= 2 (next-state 19 data R C)))  ; no op
+    ))
+  )
+
+; 3 1 2 2 3
+; 2 2 2 3 1
+; 1 2 1 2 2
+; 2 1 2 2 2
+(deftest boom-test
+  (testing "compute the next state of a cell"
+    (let [
+          data     [3 1 2 2 3, 2 2 2 3 1, 1 2 1 2 2, 2 1 2 2 2 ]
+          expected [0 0 0 2 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 2 2 ]
+          R 4
+          C 5]
+      (is (= expected (boom data R C)))))
+  )

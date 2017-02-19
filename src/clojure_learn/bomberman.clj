@@ -67,6 +67,11 @@
   ; if this cell is in the bottom row, then obviously return false
   (if (cell-in-last-row? k R C) false (= 1 (data (+ k C)))))
 
+(defn current-cell-bomb?
+  "returns true is the current cell is about to explode"
+  [data k R C]
+  (= 1 (data k)))
+
 ; next state of cell k is a function of the current state of the following cells
 ; k+1 (if k % C != C-1) (i.e., if k is not the last cell in the row ... )
 ; k-1 (if k % C != 0 ) (i.e., if k is not the first cell in the row ... )
@@ -74,14 +79,26 @@
 ; k+C (if k / C != R-1) (i.e., k is not in the last row )
 
 (defn next-state
-  "compute the next state of cell based on the state of its neighbors"
+  "compute the next state of cell based on its own state and that of its neighbors"
   [k data R C]
-  )
+  (let [
+        flist [current-cell-bomb? prev-cell-bomb? next-cell-bomb? top-cell-bomb? bottom-cell-bomb?]
+        explode? (some true? (map #(%1 data k R C) flist))
+        ]
+        (if explode? 0 (data k)))) ; if about to explode return 0, else the current state
 
 (defn boom
   "blow up the bombs"
-  [data rows]
-  (list 1 2 3 ))
+  [data rows cols]
+  ; See https://clojuredocs.org/clojure.core/map-indexed %1 = index, %2 = item
+
+  (defn foo
+    [index _] ; item is not used
+    (next-state index data rows cols))
+
+  (into [] (map-indexed foo data)))
+
+
 
 (defn -main
   "Main loop"
