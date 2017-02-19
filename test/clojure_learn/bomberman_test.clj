@@ -60,3 +60,82 @@
     (is (= true (cell-in-last-row? 15 4 5)))
     (is (= true (cell-in-last-row? 18 4 5)))))
 
+(deftest next-cell-bomb-test
+  (testing "is the next cell a bomb - end of row"
+    (let [
+          data [0 0 0 1, 0 0 0 0]
+          R 2
+          C 4]
+      (is (not (next-cell-bomb? data 3 R C)))
+      (is (not (next-cell-bomb? data 7 R C)))))
+  (testing "is the next cell a bomb - start of row"
+    (let [
+          data [0 1 0 0, 0 0 0 0, 0 1 0 0 ]
+          R 3
+          C 4]
+      (is (next-cell-bomb? data 0 R C))
+      (is (not (next-cell-bomb? data 4 R C)))
+      (is (next-cell-bomb? data 8 R C))))
+  (testing "is the next cell a bomb - middle of row"
+    (let [
+          data [0 0 1 0, 0 0 0 1, 0 0 0 0 ]
+          R 3
+          C 4]
+      (is (next-cell-bomb? data 1 R C))
+      (is (not (next-cell-bomb? data 5 R C)))
+      (is (not (next-cell-bomb? data 8 R C)))))
+  )
+
+(deftest prev-cell-bomb-test
+  (testing "is the previous cell a bomb - start of row"
+    (let [
+          data [0 0 0 0, 1 0 0 0]
+          R 2
+          C 4]
+      (is (not (prev-cell-bomb? data 0 R C)))
+      (is (not (prev-cell-bomb? data 4 R C)))))
+  (testing "is the previous cell a bomb - middle of row"
+    (let [
+          data [0 0 0 0, 1 0 0 0, 0 0 0 0]
+          R 3
+          C 4]
+      (is (not (prev-cell-bomb? data 1 R C)))
+      (is (prev-cell-bomb? data 5 R C))
+      (is (not (prev-cell-bomb? data 9 R C)))))
+  )
+
+(deftest top-cell-bomb-test
+  (testing "is the cell in the top cell a bomb - first row"
+    (let [
+          data [0 1 0 1, 0 0 0 0]
+          R 2
+          C 4]
+      (is (not (top-cell-bomb? data 0 R C)))
+      (is (not (top-cell-bomb? data 3 R C)))))
+  (testing "is the cell in the top cell a bomb - other rows"
+    (let [
+          data [0 1 0 1, 0 0 0 0]
+          R 2
+          C 4]
+      (is (top-cell-bomb? data 5 R C))
+      (is (not (top-cell-bomb? data 6 R C)))
+      (is (top-cell-bomb? data 7 R C))))
+  )
+
+(deftest bottom-cell-bomb-test
+  (testing "is the cell in the bottom cell a bomb - bottom row"
+    (let [
+          data [1 1 1 1 , 1 1 1 1]
+          R 2
+          C 4]
+      (is (not (bottom-cell-bomb? data 5 R C)))
+      (is (not (bottom-cell-bomb? data 7 R C)))))
+  (testing "is the cell in the bottom cell a bomb - other rows"
+    (let [
+          data [0 0 0 0, 0 0 0 0, 0 1 0 1]
+          R 3
+          C 4]
+      (is (bottom-cell-bomb? data 5 R C))
+      (is (not (bottom-cell-bomb? data 6 R C)))
+      (is (bottom-cell-bomb? data 7 R C))))
+  )
