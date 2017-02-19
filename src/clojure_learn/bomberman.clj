@@ -17,12 +17,12 @@
 (defn tick
   "A single clock tick - decrement the time on all the bombs"
   [data]
-  (map #(if (> %1 0) (dec %1) 0) data))
+  (into [] (map #(if (> %1 0) (dec %1) 0) data)))
 
 (defn place-bombs
   "Place a bomb on all the empty slots"
   [data]
-  (map #(if (= %1 0 ) 3 %1) data))
+  (into [] (map #(if (= %1 0 ) 3 %1) data)))
 
 (defn first-cell-in-row?
   "return true if this is the first cell in the row, false otherwise"
@@ -80,7 +80,7 @@
 
 (defn next-state
   "compute the next state of cell based on its own state and that of its neighbors"
-  [k data R C]
+  [data k R C]
   (let [
         flist [current-cell-bomb? prev-cell-bomb? next-cell-bomb? top-cell-bomb? bottom-cell-bomb?]
         explode? (some true? (map #(%1 data k R C) flist))
@@ -90,15 +90,43 @@
 (defn boom
   "blow up the bombs"
   [data rows cols]
+  (println "boom" data rows cols)
   ; See https://clojuredocs.org/clojure.core/map-indexed %1 = index, %2 = item
 
   (defn foo
     [index _] ; item is not used
-    (next-state index data rows cols))
+    (next-state data index rows cols))
 
   (into [] (map-indexed foo data)))
 
 
+; 0  initial boom
+; 1  tick boom
+; 2  tick pace boom
+; 3  tick boom
+; 4  step 3 : tick place boom
+; 5  step 4 ; tick boom
+; 6  step 3 ; tick place boom
+; 7  step 4 ; tick boom
+
+
+
+(defn simulate
+  "given an initial state, do a simultation for n seconds"
+  [initial-state rows cols n]
+
+  (loop [t 0
+         state initial-state]
+    (if (= t n)
+      state
+      (let [
+            tmp1 (tick state)
+            tmp2 (if (even? n) (place-bombs tmp1) tmp1)
+            next-data (boom tmp2 rows cols)
+            ]
+        (println t next-data)
+        (recur (inc t) next-data))))
+  )
 
 (defn -main
   "Main loop"

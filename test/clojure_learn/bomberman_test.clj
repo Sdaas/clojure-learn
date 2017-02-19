@@ -16,11 +16,31 @@
 
 (deftest tick-test
   (testing "testing the tick function"
-  (is (= '(0 0 1 2 3 4) (tick '(0 1 2 3 4 5))))))
+    (let [
+          data [0 1 2 3 4 5]
+          exp [0 0 1 2 3 4]
+          out (tick data)
+          ]
+      (is (vector? out))   ; the output must be a vector
+      (is (= out exp))     ; the output must match expectations
+      )
+    )
+  )
+
 
 (deftest place-bombs-test
   (testing "place bombs in all places wehre ther is no bomb"
-    (is (= '(3 1 3 2 3 3 3 4) (place-bombs '(0 1 0 2 0 3 0 4))))))
+    (let [
+          data [0 1 0 2 0 3 0 4]
+          exp [3 1 3 2 3 3 3 4]
+          out (place-bombs data)
+          ]
+      (is (vector? out)) ; the output of the function must be a vector
+      (is (= out exp)) ; output must match expectations
+      )
+    )
+  )
+
 
 ; All the following tests are based on the following 4 x 5 matrix
 ; 0  1  2  3  4
@@ -150,29 +170,29 @@
         data [3 1 2 2 3, 2 2 2 3 1, 1 2 1 2 2, 2 1 2 2 2 ]
         R 4
         C 5]
-    (is (= 0 (next-state 0 data R C)))  ; bomb goes off in next cell
-    (is (= 0 (next-state 1 data R C)))  ; bomb goes off in this cell
-    (is (= 0 (next-state 2 data R C)))  ; bomb goes off in previous cell
-    (is (= 2 (next-state 3 data R C)))  ; no-op
-    (is (= 0 (next-state 4 data R C)))  ; bomb goes off in the cell below
+    (is (= 0 (next-state data 0 R C)))  ; bomb goes off in next cell
+    (is (= 0 (next-state data 1 R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state data 2 R C)))  ; bomb goes off in previous cell
+    (is (= 2 (next-state data 3 R C)))  ; no-op
+    (is (= 0 (next-state data 4 R C)))  ; bomb goes off in the cell below
 
-    (is (= 0 (next-state 5 data R C)))  ; bomb goes off in the cell below
-    (is (= 0 (next-state 6 data R C)))  ; bomb goes off in the cell above
-    (is (= 0 (next-state 7 data R C)))  ; bomb goes off in the cell below
-    (is (= 0 (next-state 8 data R C)))  ; bomb goes off in next cell
-    (is (= 0 (next-state 8 data R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state data 5 R C)))  ; bomb goes off in the cell below
+    (is (= 0 (next-state data 6 R C)))  ; bomb goes off in the cell above
+    (is (= 0 (next-state data 7 R C)))  ; bomb goes off in the cell below
+    (is (= 0 (next-state data 8 R C)))  ; bomb goes off in next cell
+    (is (= 0 (next-state data 9 R C)))  ; bomb goes off in this cell
 
-    (is (= 0 (next-state 10 data R C)))  ; bomb goes off in this cell
-    (is (= 0 (next-state 11 data R C)))  ; bomb goes off in three cells around
-    (is (= 0 (next-state 12 data R C)))  ; bomb goes off in this cell
-    (is (= 0 (next-state 13 data R C)))  ; bomb goes off in previous cell
-    (is (= 0 (next-state 14 data R C)))  ; bomb goes off in cell above
+    (is (= 0 (next-state data 10 R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state data 11 R C)))  ; bomb goes off in three cells around
+    (is (= 0 (next-state data 12 R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state data 13 R C)))  ; bomb goes off in previous cell
+    (is (= 0 (next-state data 14 R C)))  ; bomb goes off in cell above
 
-    (is (= 0 (next-state 15 data R C)))  ; bomb goes off in cell above
-    (is (= 0 (next-state 16 data R C)))  ; bomb goes off in this cell
-    (is (= 0 (next-state 17 data R C)))  ; bomb goes off in previous cell
-    (is (= 2 (next-state 18 data R C)))  ; no op
-    (is (= 2 (next-state 19 data R C)))  ; no op
+    (is (= 0 (next-state data 15 R C)))  ; bomb goes off in cell above
+    (is (= 0 (next-state data 16 R C)))  ; bomb goes off in this cell
+    (is (= 0 (next-state data 17 R C)))  ; bomb goes off in previous cell
+    (is (= 2 (next-state data 18 R C)))  ; no op
+    (is (= 2 (next-state data 19 R C)))  ; no op
     ))
   )
 
@@ -181,7 +201,7 @@
 ; 1 2 1 2 2
 ; 2 1 2 2 2
 (deftest boom-test
-  (testing "compute the next state of a cell"
+  (testing "compute the next state of a cell after explosion"
     (let [
           data     [3 1 2 2 3, 2 2 2 3 1, 1 2 1 2 2, 2 1 2 2 2 ]
           expected [0 0 0 2 0, 0 0 0 0 0, 0 0 0 0 0, 0 0 0 2 2 ]
@@ -189,3 +209,14 @@
           C 5]
       (is (= expected (boom data R C)))))
   )
+
+(deftest simulate-test
+  (testing "do a simultation over time"
+    (let [
+          data [0 3 0 0, 0 0 3 0, 0 0 3 0, 3 0 0 0]
+          exp1 [0 2 0 0, 0 0 2 0, 0 0 2 0, 2 0 0 0]
+          R 4
+          C 4]
+      ;(is (= data (simulate data R C 0)))
+      (is (= exp1 (simulate data R C 1)))
+      )))
