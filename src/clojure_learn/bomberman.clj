@@ -1,18 +1,15 @@
 (ns clojure-learn.bomberman
-  (use [clojure-learn.simpleio :only (read-n write-n)])
-  (use [clojure.set :only (difference)])
-  (use [clojure.string :only (split triml)])
+  (use [clojure-learn.simpleio :only (read-n)])
+  (use [clojure.string :only (split)])
   (:gen-class))
 
 ; Bomber Man
 ;
 ; https://www.hackerrank.com/challenges/bomber-man
 ;
-
 ; This is what each value means
 ; 0 : There is no bomb here
 ; n : Number of ticks before the bomb goes off
-;
 
 (defn tick
   "A single clock tick - decrement the time on all the bombs"
@@ -98,13 +95,14 @@
 
   (into [] (map-indexed foo data)))
 
+
 (defn simulate
   "given an initial state, do a simultation for n seconds"
   [initial-state rows cols n]
-  (println "simulate" initial-state rows cols n)
+  #(println "simulate" initial-state rows cols n)
   (loop [t 0
          state initial-state]
-    (println t state)
+    #(println t state)
     (if (= t n)
       state
       (let [
@@ -112,17 +110,42 @@
             tmp2 (tick tmp1)
             next-data (if (odd? t) (place-bombs tmp2) tmp2)
             ]
-        (println "*" tmp1)
-        (println "*" tmp2)
-        (println "*" next-data)
+        #(println "*" tmp1)
+        #(println "*" tmp2)
+        #(println "*" next-data)
         (recur (inc t) next-data))))
   )
+
+(defn format-input
+   "Format the input into a vector" ; [ "...O..." . . . ] with one entry per row
+  [strvec]
+  (let [
+        str (reduce concat strvec) ; concat them into a big sequence of characters
+        tmp (map #(if (= %1 \.) 0 3) str) ; convert . to 0 and O to 3 )
+        ]
+    (into [] tmp)) ; return a vector, not a list
+  )
+
+(defn output
+  [data rows cols]
+  (let [
+        tmp1 (partition cols (map #(if (= 0 %1) \. \O) data))
+        tmp2 (map #(apply str %1) tmp1)
+        ]
+    (doseq [x tmp2] (println x))))
+
+; The insight is that the output after time n (n>4) is the same as the output at 4 + n mod 4.
+; So the output at time 8 is the same as that at time 4 + 8 mod 4 = 4
+; and the output at time 9 is the same as that at time 4 + 9 mod 4 = 5
 
 (defn -main
   "Main loop"
   [& args]
   (let [
-        t      (Integer/parseInt (read-line))   ; number of test cases
-        strvec (read-n t) ; read all the lines into a vector of strings
+        [rows cols n]  (map #(Integer/parseInt %) (split (read-line) #"\s+"))
+        strvec (read-n rows) ; read all the lines into a vector of strings
+        data (format-input strvec)
+        n-dash (if (> n 4) (+ 4 (rem n 4)) n)
+        out  (simulate data rows cols n-dash)
         ]
-    (doseq [item strvec] (println item))))
+    (output out rows cols)))
